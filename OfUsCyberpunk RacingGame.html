@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Of Us · cyberpunk racing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: #0b0d17;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: pan-y pinch-zoom; 
+        }
+        .game-wrapper {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            background: #120e1b;
+            border-radius: 2rem 2rem 1.5rem 1.5rem;
+            box-shadow: 0 0 30px #00f7ff88, 0 0 10px #a020f0;
+            border: 2px solid #6f00ff;
+            overflow: hidden;
+            position: relative;
+        }
+        canvas#gameCanvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: #000000;
+            cursor: none;
+            touch-action: none;  /* prevent scroll while swiping */
+        }
+        .control-panel {
+            background: #1a1728;
+            padding: 12px 8px 16px;
+            border-top: 3px solid #00f0ff;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .gamepad-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 15px;
+        }
+        .gamepad-btn {
+            background: #2a2538;
+            border-radius: 60px;
+            box-shadow: 0 5px 0 #0b0b1a, 0 8px 20px #00ccff66;
+            color: white;
+            font-weight: bold;
+            font-size: 1.6rem;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #b200ff;
+            transition: 0.06s linear;
+            touch-action: manipulation;
+            cursor: pointer;
+            user-select: none;
+        }
+        .gamepad-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 0 #6f00ff, 0 0 30px cyan;
+            background: #3d2e55;
+        }
+        .lane-indicator {
+            color: #b0f0ff;
+            font-size: 1rem;
+            text-shadow: 0 0 5px magenta;
+            letter-spacing: 2px;
+        }
+        .upload-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            background: #0f0c1a;
+            padding: 12px 5px;
+            border-radius: 60px;
+            border: 1px solid #ff66ff;
+        }
+        .upload-label {
+            background: #22203a;
+            color: #99f6ff;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid cyan;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 0 12px #00e0ff;
+            cursor: pointer;
+        }
+        .upload-label input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+        }
+        .title {
+            text-align: center;
+            font-size: 2.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #ff00c8, #00e0ff, #c300ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px cyan, 0 0 30px blue;
+            letter-spacing: 3px;
+            line-height: 1.2;
+        }
+        .sub {
+            text-align: center;
+            color: #b3adff;
+            font-size: 0.9rem;
+            margin-top: -8px;
+        }
+        .score-panel {
+            display: flex;
+            justify-content: space-between;
+            color: #aef0ff;
+            padding: 0 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .reset-btn {
+            background: #ff0055;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 6px 20px;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 0 10px red;
+        }
+        .status {
+            color: #88ffaa;
+        }
+    </style>
+</head>
+<body>
+<div class="game-wrapper">
+    <div class="title">🏁 OF US 🏁</div>
+    <div class="sub">CYBERPUNK RACING · avoid your ex</div>
+
+    <!-- canvas 3D-like (2.5D perspective) -->
+    <canvas id="gameCanvas" width="400" height="500"></canvas>
+
+    <div class="control-panel">
+        <!-- audio + image upload row -->
+        <div class="upload-area">
+            <label class="upload-label">
+                🎵 MP3 (OF US)
+                <input type="file" id="audioUpload" accept="audio/mpeg,audio/mp3">
+            </label>
+            <label class="upload-label">
+                📸 YOU
+                <input type="file" id="imgYou" accept="image/*">
+            </label>
+            <label class="upload-label">
+                💔 EX
+                <input type="file" id="imgEx" accept="image/*">
+            </label>
+        </div>
+
+        <!-- gamepad for mobile/tablet -->
+        <div class="gamepad-row">
+            <div class="gamepad-btn" id="padLeft">←</div>
+            <div class="lane-indicator" id="laneInfo">LANE •2</div>
+            <div class="gamepad-btn" id="padRight">→</div>
+        </div>
+
+        <!-- score & reset -->
+        <div class="score-panel">
+            <span>⏱️ <span id="scoreValue">0</span>s</span>
+            <button class="reset-btn" id="resetGame">↺ NEW RACE</button>
+            <span class="status" id="statusMsg">⏸️ start moving</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========== GAME CONFIG ==========
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // lane settings (3 lanes)
+        const LANE_COUNT = 3;
+        const LANE_WIDTH = 120;   // virtual
+        const CAR_WIDTH = 48;
+        const CAR_HEIGHT = 70;
+        const OBSTACLE_SIZE = 52;  // square-ish
+
+        // player start
+        let playerLane = 1;        // 0-left, 1-center, 2-right
+        let playerX = 0;            // actual pixel x (calc later)
+        const baseY = canvas.height - 90;   // car Y fixed
+
+        // obstacles
+        let obstacles = [];
+        let frameCounter = 0;
+        const OBSTACLE_SPAWN_RATE = 38;   // frames between spawns
+        const SPEED = 4.5;                 // downward speed
+
+        // score (time survived in seconds)
+        let score = 0;
+        let gameActive = true;
+        let gameOverFlag = false;
+
+        // custom images for obstacles
+        let userImage = null;       // "you"
+        let exImage = null;         // "ex"
+        let defaultGradient = true;
+
+        // uploaded audio
+        let backgroundAudio = null;
+        let audioUrl = null;
+
+        // ========== HELPER FUNCTIONS ==========
+        function getLaneCenterX(laneIndex) {
+            const laneWidthVirtual = LANE_WIDTH;
+            const totalWidth = laneWidthVirtual * LANE_COUNT;
+            const startX = (canvas.width - totalWidth) / 2;
+            return startX + laneIndex * laneWidthVirtual + laneWidthVirtual / 2;
+        }
+
+        // update playerX based on lane
+        function updatePlayerX() {
+            playerX = getLaneCenterX(playerLane);
+        }
+        updatePlayerX();
+
+        // ========== OBSTACLE SPAWN ==========
+        function spawnObstacle() {
+            if (!gameActive) return;
+            const lane = Math.floor(Math.random() * LANE_COUNT);
+            const x = getLaneCenterX(lane) - OBSTACLE_SIZE/2;
+            obstacles.push({
+                x: x,
+                y: -OBSTACLE_SIZE,
+                lane: lane,
+                width: OBSTACLE_SIZE,
+                height: OBSTACLE_SIZE,
+                image: (Math.random() < 0.5) ? userImage : exImage, // alternate for fun
+            });
+        }
+
+        // ========== COLLISION DETECTION (rect) ==========
+        function checkCollisions() {
+            const carRect = {
+                x: playerX - CAR_WIDTH/2,
+                y: baseY - CAR_HEIGHT/2,
+                w: CAR_WIDTH,
+                h: CAR_HEIGHT
+            };
+            for (let ob of obstacles) {
+                const obRect = {
+                    x: ob.x,
+                    y: ob.y,
+                    w: ob.width,
+                    h: ob.height
+                };
+                if (carRect.x < obRect.x + obRect.w &&
+                    carRect.x + carRect.w > obRect.x &&
+                    carRect.y < obRect.y + obRect.h &&
+                    carRect.y + carRect.h > obRect.y) {
+                    return true; // collision
+                }
+            }
+            return false;
+        }
+
+        // ========== UPDATE GAME ==========
+        function updateGame() {
+            if (!gameActive) return;
+
+            // move obstacles downward
+            for (let i = obstacles.length-1; i >= 0; i--) {
+                obstacles[i].y += SPEED;
+                // remove if off screen (below canvas)
+                if (obstacles[i].y > canvas.height + 50) {
+                    obstacles.splice(i,1);
+                }
+            }
+
+            // spawn new obstacles
+            frameCounter++;
+            if (frameCounter % OBSTACLE_SPAWN_RATE === 0) {
+                spawnObstacle();
+            }
+
+            // collision detection
+            if (checkCollisions()) {
+                gameActive = false;
+                gameOverFlag = true;
+                document.getElementById('statusMsg').innerText = '💥 GAME OVER';
+                return;
+            }
+
+            // increase score (survival time)
+            score += 1/20;  // assuming 60fps -> 3 per second roughly
+            document.getElementById('scoreValue').innerText = Math.floor(score);
+        }
+
+        // ========== RENDERING (cyberpunk style) ==========
+        function draw() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+
+            // background (dark futuristic)
+            const grad = ctx.createLinearGradient(0,0,0,canvas.height);
+            grad.addColorStop(0,'#08041c');
+            grad.addColorStop(0.7,'#160b33');
+            grad.addColorStop(1,'#000000');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+
+            // neon road lines
+            ctx.strokeStyle = '#00f7ff';
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#0ff';
+            for (let i=1; i<LANE_COUNT; i++) {
+                let laneX = getLaneCenterX(i-1) + LANE_WIDTH/2;
+                ctx.beginPath();
+                ctx.setLineDash([20,25]);
+                ctx.strokeStyle = '#f0f';
+                ctx.shadowColor = '#ff66ff';
+                ctx.moveTo(laneX, 0);
+                ctx.lineTo(laneX, canvas.height);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]);
+            ctx.shadowBlur = 0;
+            // lane markers glow
+            for (let l=0; l<LANE_COUNT; l++) {
+                let cx = getLaneCenterX(l);
+                ctx.fillStyle = '#aaffdd20';
+                ctx.beginPath();
+                ctx.arc(cx, canvas.height-30, 10, 0, Math.PI*2);
+                ctx.fill();
+            }
+
+            // draw obstacles (uploaded images or fallback)
+            for (let ob of obstacles) {
+                if (ob.image && ob.image instanceof HTMLImageElement && ob.image.complete && ob.image.naturalHeight>0) {
+                    // draw image with neon glow
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = '#ff00c3';
+                    ctx.drawImage(ob.image, ob.x, ob.y, ob.width, ob.height);
+                } else {
+                    // default cyberpunk shape (ex/you text)
+                    ctx.shadowBlur = 25;
+                    ctx.shadowColor = '#ff00ff';
+                    ctx.fillStyle = (Math.random()>0.5) ? '#ff66aaff' : '#33ccffff';
+                    ctx.beginPath();
+                    ctx.roundRect(ob.x, ob.y, ob.width, ob.height, 12);
+                    ctx.fill();
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 26px monospace';
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = '#0000ff';
+                    ctx.fillText('👤', ob.x+10, ob.y+45);
+                }
+            }
+            ctx.shadowBlur = 0;
+
+            // draw player car (cyberpunk 3D style)
+            ctx.shadowBlur = 40;
+            ctx.shadowColor = '#00ccff';
+            // body
+            ctx.fillStyle = '#ff00c1';
+            ctx.beginPath();
+            ctx.roundRect(playerX-CAR_WIDTH/2, baseY-CAR_HEIGHT/2, CAR_WIDTH, CAR_HEIGHT, 16);
+            ctx.fill();
+            // windscreen
+            ctx.fillStyle = '#aaf0ff';
+            ctx.beginPath();
+            ctx.roundRect(playerX-18, baseY-30, 36, 25, 8);
+            ctx.fill();
+            // neon lights
+            ctx.fillStyle = 'cyan';
+            ctx.beginPath();
+            ctx.arc(playerX-20, baseY+25, 8, 0, 2*Math.PI);
+            ctx.arc(playerX+20, baseY+25, 8, 0, 2*Math.PI);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // HUD: lane arrows
+            ctx.font = 'bold 30px monospace';
+            ctx.fillStyle = '#bbff99';
+            ctx.fillText('◀', 20, 60);
+            ctx.fillText('▶', canvas.width-50, 60);
+
+            if (!gameActive && gameOverFlag) {
+                ctx.globalAlpha = 0.8;
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0,canvas.height/2-40,canvas.width,80);
+                ctx.globalAlpha = 1;
+                ctx.font = 'bold 32px sans-serif';
+                ctx.fillStyle = '#ff0066';
+                ctx.shadowBlur = 30;
+                ctx.shadowColor = '#ff0000';
+                ctx.fillText('GAME OVER', 50, canvas.height/2+10);
+            }
+        }
+
+        // helper canvas roundRect
+        CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+            if (w < 2 * r) r = w / 2;
+            if (h < 2 * r) r = h / 2;
+            this.moveTo(x + r, y);
+            this.lineTo(x + w - r, y);
+            this.quadraticCurveTo(x + w, y, x + w, y + r);
+            this.lineTo(x + w, y + h - r);
+            this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            this.lineTo(x + r, y + h);
+            this.quadraticCurveTo(x, y + h, x, y + h - r);
+            this.lineTo(x, y + r);
+            this.quadraticCurveTo(x, y, x + r, y);
+            this.closePath();
+            return this;
+        };
+
+        // ========== GAME LOOP ==========
+        function gameLoop() {
+            if (gameActive) {
+                updateGame();
+            }
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+        gameLoop();
+
+        // ========== PLAYER CONTROLS (keyboard + gamepad buttons) ==========
+        function moveLeft() {
+            if (!gameActive) return;
+            if (playerLane > 0) {
+                playerLane--;
+                updatePlayerX();
+                document.getElementById('laneInfo').innerText = `LANE •${playerLane+1}`;
+            }
+        }
+        function moveRight() {
+            if (!gameActive) return;
+            if (playerLane < LANE_COUNT-1) {
+                playerLane++;
+                updatePlayerX();
+                document.getElementById('laneInfo').innerText = `LANE •${playerLane+1}`;
+            }
+        }
+
+        document.getElementById('padLeft').addEventListener('click', (e) => {
+            e.preventDefault();
+            moveLeft();
+        });
+        document.getElementById('padRight').addEventListener('click', (e) => {
+            e.preventDefault();
+            moveRight();
+        });
+
+        // optional keyboard for testing
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') { e.preventDefault(); moveLeft(); }
+            if (e.key === 'ArrowRight') { e.preventDefault(); moveRight(); }
+        });
+
+        // ========== RESET GAME ==========
+        document.getElementById('resetGame').addEventListener('click', () => {
+            obstacles = [];
+            playerLane = 1;
+            updatePlayerX();
+            gameActive = true;
+            gameOverFlag = false;
+            score = 0;
+            document.getElementById('scoreValue').innerText = '0';
+            document.getElementById('statusMsg').innerText = '🏁 racing';
+            document.getElementById('laneInfo').innerText = 'LANE •2';
+        });
+
+        // ========== IMAGE UPLOADS (you / ex) ==========
+        document.getElementById('imgYou').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => { userImage = img; };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('imgEx').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => { exImage = img; };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // ========== AUDIO UPLOAD (OF US mp3) ==========
+        document.getElementById('audioUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (backgroundAudio) {
+                backgroundAudio.pause();
+                if (audioUrl) URL.revokeObjectURL(audioUrl);
+            }
+            const url = URL.createObjectURL(file);
+            audioUrl = url;
+            backgroundAudio = new Audio(url);
+            backgroundAudio.loop = true;
+            backgroundAudio.volume = 0.6;
+            backgroundAudio.play().catch(e => console.log('autoplay blocked', e));
+            document.getElementById('statusMsg').innerText = '🎶 audio loaded';
+        });
+
+        // autoplay any audio after first touch? not needed, but we try to resume on canvas click
+        canvas.addEventListener('touchstart', () => {
+            if (backgroundAudio && backgroundAudio.paused) {
+                backgroundAudio.play().catch(()=>{});
+            }
+        });
+        canvas.addEventListener('click', () => {
+            if (backgroundAudio && backgroundAudio.paused) {
+                backgroundAudio.play().catch(()=>{});
+            }
+        });
+
+        // ensure lane display on start
+        document.getElementById('laneInfo').innerText = 'LANE •2';
+
+        // set initial status
+        document.getElementById('statusMsg').innerText = 'upload mp3, you, ex';
+    })();
+</script>
+</body>
+</html>
