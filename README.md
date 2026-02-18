@@ -176,6 +176,13 @@
             opacity: 0;
             cursor: pointer;
         }
+        
+        .upload-btn.locked {
+            border-color: var(--neon-purple);
+            color: var(--neon-purple);
+            pointer-events: none;
+            background: rgba(188, 19, 254, 0.1);
+        }
 
         .file-status {
             font-size: 0.7rem;
@@ -197,6 +204,13 @@
             box-shadow: 0 0 20px var(--neon-pink);
             text-transform: uppercase;
             transition: transform 0.1s;
+        }
+        
+        .start-btn:disabled {
+            background: #555;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.5;
         }
 
         .start-btn:active {
@@ -248,21 +262,21 @@
             margin: 20px 0;
         }
 
-        /* Lane indicators for 3D depth perception help */
         .lane-guide {
             position: absolute;
-            bottom: 20%;
+            bottom: 30%;
             width: 100%;
             display: flex;
             justify-content: center;
-            opacity: 0.3;
+            opacity: 0.2;
             pointer-events: none;
         }
         .lane-guide div {
             width: 2px;
             height: 20px;
-            background: white;
-            margin: 0 10vw; 
+            background: var(--neon-blue);
+            margin: 0 8vw;
+            box-shadow: 0 0 10px var(--neon-blue);
         }
 
     </style>
@@ -285,6 +299,12 @@
             </div>
         </div>
 
+        <!-- Lane Markers -->
+        <div class="lane-guide">
+            <div></div>
+            <div></div>
+        </div>
+
         <!-- Touch Controls -->
         <div class="controls-area" id="touch-controls">
             <div class="dpad-btn" id="btn-left">←</div>
@@ -298,10 +318,12 @@
         <h2>CYBERPUNK RACING</h2>
         
         <div class="upload-grid">
-            <label class="upload-btn">
-                <span>🎵 Select Track (MP3)</span>
-                <span class="file-status" id="status-audio">Default: None</span>
-                <input type="file" id="input-audio" accept="audio/*">
+            <!-- Audio - Auto Loaded -->
+            <label class="upload-btn" id="btn-audio-wrapper">
+                <span>🎵 Soundtrack</span>
+                <span class="file-status" id="status-audio">Searching for 'Of Us'...</span>
+                <!-- Fallback input if auto-load fails -->
+                <input type="file" id="input-audio" accept="audio/*" style="display:none">
             </label>
             
             <label class="upload-btn">
@@ -317,7 +339,7 @@
             </label>
         </div>
 
-        <button class="start-btn" id="btn-start">DRIVE</button>
+        <button class="start-btn" id="btn-start" disabled>LOADING...</button>
         <p style="margin-top:20px; font-size: 0.8rem; color: #888;">Avoid ALL memories (images). Use Arrow Keys or On-Screen buttons.</p>
     </div>
 
@@ -333,29 +355,31 @@
     /**
      * OF US - CYBERPUNK RACING GAME
      * Powered by Three.js
+     * Featuring "Of Us" by Delrogue
      */
 
-    // --- GAME CONFIGURATION ---
+    // --- CONFIGURATION ---
     const CONFIG = {
         laneWidth: 3.5,
         laneCount: 3,
         speedBase: 0.4,
         speedMax: 1.2,
         speedIncrement: 0.0001,
-        obstacleSpawnRate: 60, // Frames
+        obstacleSpawnRate: 60,
         colors: {
             road: 0x111111,
             grid: 0xff00ff,
             fog: 0x050510,
             car: 0x00f3ff
-        }
+        },
+        // CHANGED: Now using MP3 format which is safer for web
+        audioFile: 'Of%20Us%20(dance).mp3' 
     };
 
     // --- GLOBAL VARIABLES ---
     let scene, camera, renderer;
     let playerCar, roadGrid, environmentParticles;
     let obstacles = [];
-    let mixer; // Animation mixer if needed
     let clock = new THREE.Clock();
     
     // Game State
@@ -363,7 +387,7 @@
     let score = 0;
     let speed = CONFIG.speedBase;
     let frameCount = 0;
-    let currentLane = 1; // 0: Left, 1: Center, 2: Right
+    let currentLane = 1; 
     let targetX = 0;
 
     // Assets
@@ -378,6 +402,7 @@
     const finalScore = document.getElementById('final-score');
     const startScreen = document.getElementById('start-screen');
     const gameOverScreen = document.getElementById('game-over-screen');
+    const btnStart = document.getElementById('btn-start');
 
     // --- INITIALIZATION ---
     function init() {
@@ -414,24 +439,50 @@
         window.addEventListener('resize', onWindowResize, false);
         document.addEventListener('keydown', onKeyDown);
         
-        // Touch Controls
         document.getElementById('btn-left').addEventListener('pointerdown', (e) => { e.preventDefault(); changeLane(-1); });
         document.getElementById('btn-right').addEventListener('pointerdown', (e) => { e.preventDefault(); changeLane(1); });
 
-        // Menu Buttons
         document.getElementById('btn-start').addEventListener('click', startGame);
         document.getElementById('btn-restart').addEventListener('click', resetGame);
         
-        // File Inputs
         setupFileInputs();
+        
+        // --- LOAD DEFAULT AUDIO ---
+        loadDefaultTrack();
 
-        // Start Loop
         animate();
     }
 
-    // --- ASSET HANDLING ---
+    // --- ASSET LOADING ---
+    function loadDefaultTrack() {
+        const statusEl = document.getElementById('status-audio');
+        const wrapper = document.getElementById('btn-audio-wrapper');
+        
+        // Fetch the MP3 file
+        fetch(CONFIG.audioFile)
+            .then(response => {
+                if (!response.ok) throw new Error("HTTP error " + response.status);
+                return response.arrayBuffer();
+            })
+            .then(arrayBuffer => {
+                initAudio(arrayBuffer);
+                statusEl.innerText = "Loaded: Of Us (Delrogue)";
+                statusEl.style.color = "#00f3ff";
+                wrapper.classList.add('locked'); // Lock input so they know it's ready
+                btnStart.disabled = false;
+                btnStart.innerText = "DRIVE";
+            })
+            .catch(err => {
+                console.warn("Auto-load failed. User must upload.", err);
+                statusEl.innerText = "Not found. Please upload MP3.";
+                document.getElementById('input-audio').style.display = 'block';
+                btnStart.disabled = false;
+                btnStart.innerText = "DRIVE (NO MUSIC)";
+            });
+    }
+
     function setupFileInputs() {
-        // Audio
+        // Fallback Audio Upload
         document.getElementById('input-audio').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(file) {
@@ -440,6 +491,7 @@
                     initAudio(ev.target.result);
                     document.getElementById('status-audio').innerText = "Loaded: " + file.name;
                     document.getElementById('status-audio').style.color = "#00f3ff";
+                    btnStart.innerText = "DRIVE";
                 };
                 reader.readAsArrayBuffer(file);
             }
@@ -452,7 +504,7 @@
                 const reader = new FileReader();
                 reader.onload = function(ev) {
                     textureYou = textureLoader.load(ev.target.result);
-                    document.getElementById('status-you').innerText = "Loaded!";
+                    document.getElementById('status-you').innerText = "Image Loaded!";
                     document.getElementById('status-you').style.color = "#00f3ff";
                 };
                 reader.readAsDataURL(file);
@@ -466,7 +518,7 @@
                 const reader = new FileReader();
                 reader.onload = function(ev) {
                     textureEx = textureLoader.load(ev.target.result);
-                    document.getElementById('status-ex').innerText = "Loaded!";
+                    document.getElementById('status-ex').innerText = "Image Loaded!";
                     document.getElementById('status-ex').style.color = "#00f3ff";
                 };
                 reader.readAsDataURL(file);
@@ -486,6 +538,10 @@
 
     function playAudio() {
         if (audioContext && audioBuffer) {
+            // Resume context if suspended (browser autoplay policy)
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
             if (audioSource) audioSource.stop();
             audioSource = audioContext.createBufferSource();
             audioSource.buffer = audioBuffer;
@@ -506,7 +562,6 @@
 
     // --- GAME OBJECTS ---
     function createRoad() {
-        // Moving Grid Plane
         const geometry = new THREE.PlaneGeometry(200, 400, 40, 40);
         const material = new THREE.MeshBasicMaterial({ 
             color: 0xff00ff, 
@@ -520,7 +575,6 @@
         roadGrid.position.z = -100;
         scene.add(roadGrid);
 
-        // Solid floor below grid to block background stars
         const floorGeo = new THREE.PlaneGeometry(200, 400);
         const floorMat = new THREE.MeshBasicMaterial({ color: 0x020205 });
         const floor = new THREE.Mesh(floorGeo, floorMat);
@@ -533,31 +587,23 @@
     function createPlayerCar() {
         playerCar = new THREE.Group();
 
-        // Cyberpunk Car Body construction
-        // Main Chassis
         const bodyGeo = new THREE.BoxGeometry(1.2, 0.5, 2.5);
-        const bodyMat = new THREE.MeshPhongMaterial({ 
-            color: 0x222222,
-            shininess: 100 
-        });
+        const bodyMat = new THREE.MeshPhongMaterial({ color: 0x222222, shininess: 100 });
         const body = new THREE.Mesh(bodyGeo, bodyMat);
         body.position.y = 0.5;
         playerCar.add(body);
 
-        // Neon Strips
         const glowMat = new THREE.MeshBasicMaterial({ color: CONFIG.colors.car });
         const strip1 = new THREE.Mesh(new THREE.BoxGeometry(1.25, 0.05, 2.55), glowMat);
         strip1.position.y = 0.3;
         playerCar.add(strip1);
 
-        // Cabin/Windshield
         const cabinGeo = new THREE.BoxGeometry(1.0, 0.4, 1.2);
         const cabinMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
         const cabin = new THREE.Mesh(cabinGeo, cabinMat);
         cabin.position.set(0, 0.9, -0.2);
         playerCar.add(cabin);
 
-        // Engine glow rear
         const engineGeo = new THREE.BoxGeometry(0.8, 0.2, 0.1);
         const engineMat = new THREE.MeshBasicMaterial({ color: 0xff0055 });
         const engine = new THREE.Mesh(engineGeo, engineMat);
@@ -568,17 +614,14 @@
     }
 
     function createEnvironment() {
-        // Starfield / Particles
         const geometry = new THREE.BufferGeometry();
         const count = 1000;
         const positions = new Float32Array(count * 3);
-        
         for(let i = 0; i < count; i++) {
-            positions[i*3] = (Math.random() - 0.5) * 100; // x
-            positions[i*3+1] = Math.random() * 30; // y
-            positions[i*3+2] = -Math.random() * 100 - 10; // z
+            positions[i*3] = (Math.random() - 0.5) * 100; 
+            positions[i*3+1] = Math.random() * 30; 
+            positions[i*3+2] = -Math.random() * 100 - 10; 
         }
-
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         const material = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 });
         environmentParticles = new THREE.Points(geometry, material);
@@ -586,48 +629,27 @@
     }
 
     function spawnObstacle() {
-        // Choose type: You (0) or Ex (1)
-        // If textures uploaded, use them. Else use colors.
         const type = Math.random() > 0.5 ? 'you' : 'ex';
         let material;
-
-        if (type === 'you' && textureYou) {
-            material = new THREE.MeshBasicMaterial({ map: textureYou });
-        } else if (type === 'ex' && textureEx) {
-            material = new THREE.MeshBasicMaterial({ map: textureEx });
-        } else {
-            // Fallbacks
-            material = new THREE.MeshPhongMaterial({ 
-                color: type === 'you' ? 0x00ff00 : 0xff0000,
-                emissive: type === 'you' ? 0x004400 : 0x440000
-            });
-        }
+        if (type === 'you' && textureYou) material = new THREE.MeshBasicMaterial({ map: textureYou });
+        else if (type === 'ex' && textureEx) material = new THREE.MeshBasicMaterial({ map: textureEx });
+        else material = new THREE.MeshPhongMaterial({ 
+            color: type === 'you' ? 0x00ff00 : 0xff0000,
+            emissive: type === 'you' ? 0x004400 : 0x440000
+        });
 
         const geometry = new THREE.BoxGeometry(2, 2, 2);
         const mesh = new THREE.Mesh(geometry, material);
-
-        // Pick a lane
-        const lane = Math.floor(Math.random() * 3); // 0, 1, 2
-        // X position: (lane - 1) * width
-        const posX = (lane - 1) * CONFIG.laneWidth;
-        
-        mesh.position.set(posX, 1, -80); // Spawn far away
-        
-        // Custom properties
-        mesh.userData = { 
-            active: true,
-            lane: lane
-        };
-
+        const lane = Math.floor(Math.random() * 3);
+        mesh.position.set((lane - 1) * CONFIG.laneWidth, 1, -80);
+        mesh.userData = { active: true, lane: lane };
         scene.add(mesh);
         obstacles.push(mesh);
     }
 
     // --- GAMEPLAY LOGIC ---
-
     function changeLane(direction) {
         if (!isGameActive) return;
-        
         const nextLane = currentLane + direction;
         if (nextLane >= 0 && nextLane < CONFIG.laneCount) {
             currentLane = nextLane;
@@ -643,64 +665,41 @@
     function update() {
         if (!isGameActive) return;
 
-        // 1. Difficulty Increase
         speed += CONFIG.speedIncrement;
         if(speed > CONFIG.speedMax) speed = CONFIG.speedMax;
 
-        // 2. Road Scrolling Effect
         roadGrid.position.z += speed;
-        if (roadGrid.position.z > -80) {
-            roadGrid.position.z = -100;
-        }
+        if (roadGrid.position.z > -80) roadGrid.position.z = -100;
 
-        // 3. Environment Pulse (Music Visualizer)
+        // Music Visualizer
         if (isAudioPlaying && audioAnalyser) {
             audioAnalyser.getByteFrequencyData(dataArray);
             const avg = dataArray.reduce((a,b)=>a+b,0) / dataArray.length;
-            const scale = 1 + (avg / 256) * 0.5; // Scale pulsing
-            
-            // Pulse road grid color
             if(avg > 100) roadGrid.material.color.setHex(0xffffff);
             else roadGrid.material.color.setHex(CONFIG.colors.grid);
         }
 
-        // 4. Player Movement (Lerp for smooth transition)
         playerCar.position.x += (targetX - playerCar.position.x) * 0.1;
-        // Tilt effect
         playerCar.rotation.z = (targetX - playerCar.position.x) * -0.1;
-        // Bobbing effect
         playerCar.position.y = 0.5 + Math.sin(clock.getElapsedTime() * 10) * 0.05;
 
-        // 5. Obstacle Handling
         frameCount++;
-        if (frameCount % Math.floor(CONFIG.obstacleSpawnRate / speed) === 0) {
-            spawnObstacle();
-        }
+        if (frameCount % Math.floor(CONFIG.obstacleSpawnRate / speed) === 0) spawnObstacle();
 
         for (let i = obstacles.length - 1; i >= 0; i--) {
             let ob = obstacles[i];
             ob.position.z += speed;
 
-            // Simple Collision Detection (AABB-ish)
-            // Z-check: if obstacle is close to car
             if (ob.position.z > -2 && ob.position.z < 2) {
-                // X-check: is car in same lane?
-                // We assume lane width is wide enough that if we are close to the center of the lane, we hit.
-                // Car width ~1.2, Obstacle Width ~2.
-                // Allow some tolerance (0.8)
-                if (Math.abs(ob.position.x - playerCar.position.x) < 1.8) {
-                    gameOver();
-                }
+                if (Math.abs(ob.position.x - playerCar.position.x) < 1.8) gameOver();
             }
 
-            // Cleanup
             if (ob.position.z > 10) {
                 scene.remove(ob);
                 obstacles.splice(i, 1);
             }
         }
 
-        // 6. Score
         score += speed * 0.1;
         hudScore.innerText = score.toFixed(2);
     }
@@ -715,13 +714,10 @@
         render();
     }
 
-    // --- GAME CONTROL FUNCTIONS ---
-
     function startGame() {
         startScreen.classList.add('hidden');
         gameOverScreen.classList.add('hidden');
         
-        // Reset state
         score = 0;
         speed = CONFIG.speedBase;
         frameCount = 0;
@@ -729,7 +725,6 @@
         targetX = 0;
         playerCar.position.x = 0;
         
-        // Clear old obstacles
         obstacles.forEach(ob => scene.remove(ob));
         obstacles = [];
 
@@ -754,7 +749,6 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    // Start
     init();
 
 </script>
