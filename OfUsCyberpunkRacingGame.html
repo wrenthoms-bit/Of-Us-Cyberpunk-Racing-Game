@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Of Us · Cyberpunk Racing</title>
+    <title>Of Us · Cyberpunk Racing v2</title>
     <!-- Import Google Font for Cyberpunk look -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <!-- Three.js CDN -->
@@ -321,7 +321,7 @@
             <!-- Audio - Auto Loaded -->
             <label class="upload-btn" id="btn-audio-wrapper">
                 <span>🎵 Soundtrack</span>
-                <span class="file-status" id="status-audio">Searching for 'Of Us'...</span>
+                <span class="file-status" id="status-audio">Scanning for 'song.mp3'...</span>
                 <!-- Fallback input if auto-load fails -->
                 <input type="file" id="input-audio" accept="audio/*" style="display:none">
             </label>
@@ -372,8 +372,9 @@
             fog: 0x050510,
             car: 0x00f3ff
         },
-        // CHANGED: Now using MP3 format which is safer for web
-        audioFile: 'Of%20Us%20(dance).mp3' 
+        // CHANGED: Simplified filename to avoid web errors
+        // Make sure you rename your file to 'song.mp3' in GitHub!
+        audioFile: 'song.mp3' 
     };
 
     // --- GLOBAL VARIABLES ---
@@ -474,7 +475,7 @@
             })
             .catch(err => {
                 console.warn("Auto-load failed. User must upload.", err);
-                statusEl.innerText = "Not found. Please upload MP3.";
+                statusEl.innerText = "Missing 'song.mp3' - Tap to upload";
                 document.getElementById('input-audio').style.display = 'block';
                 btnStart.disabled = false;
                 btnStart.innerText = "DRIVE (NO MUSIC)";
