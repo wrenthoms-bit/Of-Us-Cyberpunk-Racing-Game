@@ -1,1 +1,890 @@
-<html><head><meta content="text/html; charset=UTF-8" http-equiv="content-type"><style type="text/css">ol{margin:0;padding:0}table td,table th{padding:0}.c0{color:#000000;font-weight:400;text-decoration:none;vertical-align:baseline;font-size:11pt;font-family:"Arial";font-style:normal}.c1{padding-top:0pt;padding-bottom:0pt;line-height:1.15;orphans:2;widows:2;text-align:left;height:11pt}.c2{padding-top:0pt;padding-bottom:0pt;line-height:1.15;orphans:2;widows:2;text-align:left}.c3{background-color:#ffffff;max-width:451.4pt;padding:72pt 72pt 72pt 72pt}.title{padding-top:0pt;color:#000000;font-size:26pt;padding-bottom:3pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:0pt;color:#666666;font-size:15pt;padding-bottom:16pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:11pt;font-family:"Arial"}p{margin:0;color:#000000;font-size:11pt;font-family:"Arial"}h1{padding-top:20pt;color:#000000;font-size:20pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-size:16pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:16pt;color:#434343;font-size:14pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:14pt;color:#666666;font-size:12pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}</style></head><body class="c3 doc-content"><p class="c2"><span class="c0">&lt;!DOCTYPE html&gt;</span></p><p class="c2"><span class="c0">&lt;html lang=&quot;en&quot;&gt;</span></p><p class="c2"><span class="c0">&lt;head&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;meta charset=&quot;UTF-8&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;title&gt;Of Us &middot; Let Me Go&lt;/title&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;!-- Import Google Font for Cyberpunk look --&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;!-- Three.js CDN --&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js&quot;&gt;&lt;/script&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;style&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; :root {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; --neon-blue: #00f3ff;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; --neon-pink: #ff00ff;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; --neon-purple: #bc13fe;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; --bg-dark: #020205; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; * {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; box-sizing: border-box;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; user-select: none;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -webkit-tap-highlight-color: transparent;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; body {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin: 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; overflow: hidden;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background-color: var(--bg-dark);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-family: &#39;Orbitron&#39;, sans-serif;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: white;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; touch-action: none; /* Prevent scroll on mobile */</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; #game-container {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; position: absolute;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; top: 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; left: 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; width: 100vw;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; height: 100vh;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; z-index: 1;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; /* UI OVERLAY */</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; #ui-layer {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; position: absolute;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; top: 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; left: 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; width: 100%;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; height: 100%;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; z-index: 10;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pointer-events: none; /* Let clicks pass through to controls if needed */</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display: flex;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; flex-direction: column;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; justify-content: space-between;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; /* HEADER / SCORE */</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .hud-header {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding: 20px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display: flex;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; justify-content: space-between;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; align-items: flex-start;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .score-box {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-align: right;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .score-label {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 0.8rem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: var(--neon-blue);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; letter-spacing: 2px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .score-val {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 2rem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-weight: 900;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-shadow: 0 0 10px var(--neon-blue);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .artist-credit {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 0.9rem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: var(--neon-pink);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-shadow: 0 0 5px var(--neon-pink);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border-left: 3px solid var(--neon-purple);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding-left: 10px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .artist-credit span {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display: block;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 1.2rem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-weight: bold;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: white;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; /* MENUS */</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .menu-screen {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; position: absolute;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; top: 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; left: 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; width: 100%;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; height: 100%;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: rgba(2, 2, 5, 0.9); /* Darker opacity */</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; backdrop-filter: blur(8px);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display: flex;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; flex-direction: column;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; align-items: center;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; justify-content: center;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pointer-events: auto;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; z-index: 20;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; transition: opacity 0.3s;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .hidden {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; opacity: 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pointer-events: none;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; h1 {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 3rem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-transform: uppercase;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin: 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -webkit-background-clip: text;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background-clip: text;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: transparent;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-shadow: 0 0 20px rgba(188, 19, 254, 0.5);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-align: center;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line-height: 1;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; h2 {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 1rem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: white;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; letter-spacing: 4px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin-bottom: 30px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; opacity: 0.8;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-align: center;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .upload-grid {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display: grid;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; grid-template-columns: 1fr;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; gap: 15px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; width: 90%;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; max-width: 400px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin-bottom: 30px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; /* CUSTOM SELECTOR STYLE */</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .track-selector {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: rgba(255, 255, 255, 0.05);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border: 1px solid var(--neon-blue);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding: 15px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border-radius: 8px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display: flex;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; flex-direction: column;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; gap: 5px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .track-selector label {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: var(--neon-blue);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 0.8rem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-transform: uppercase;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin-bottom: 5px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .cyber-select {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: rgba(0,0,0,0.5);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border: 1px solid var(--neon-purple);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: white;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding: 10px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-family: &#39;Orbitron&#39;, sans-serif;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 0.9rem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border-radius: 4px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; outline: none;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; cursor: pointer;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .cyber-select:focus {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 0 10px var(--neon-purple);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .upload-btn {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: rgba(255, 255, 255, 0.05);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border: 1px solid var(--neon-blue);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding: 15px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border-radius: 8px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: var(--neon-blue);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-family: &#39;Orbitron&#39;, sans-serif;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; cursor: pointer;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; position: relative;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; overflow: hidden;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-align: center;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; transition: 0.3s;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .upload-btn:hover {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: rgba(0, 243, 255, 0.1);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 0 15px var(--neon-blue);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .upload-btn input {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; position: absolute;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; top: 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; left: 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; width: 100%;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; height: 100%;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; opacity: 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; cursor: pointer;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .upload-btn.locked {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border-color: var(--neon-purple);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: var(--neon-purple);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pointer-events: none;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: rgba(188, 19, 254, 0.1);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .file-status {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 0.7rem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: white;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display: block;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin-top: 5px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .start-btn {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: var(--neon-pink);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: white;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border: none;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding: 15px 50px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 1.5rem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-family: &#39;Orbitron&#39;, sans-serif;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-weight: bold;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border-radius: 50px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; cursor: pointer;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 0 20px var(--neon-pink);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-transform: uppercase;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; transition: transform 0.1s;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .start-btn:disabled {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: #555;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; box-shadow: none;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; cursor: not-allowed;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; opacity: 0.5;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .start-btn:active {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; transform: scale(0.95);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; /* TOUCH CONTROLS */</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .controls-area {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; width: 100%;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; height: 200px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display: flex;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; justify-content: space-between;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; align-items: center;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; padding: 20px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pointer-events: auto;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin-bottom: 20px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .dpad-btn {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; width: 80px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; height: 80px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: rgba(255, 255, 255, 0.1);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border: 2px solid var(--neon-blue);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; border-radius: 50%;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display: flex;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; align-items: center;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; justify-content: center;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 2rem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: white;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; backdrop-filter: blur(4px);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; transition: 0.1s;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .dpad-btn:active {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: var(--neon-blue);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: black;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 0 20px var(--neon-blue);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; /* GAME OVER MODAL */</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; #game-over-screen {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; z-index: 30;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .final-score {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; font-size: 4rem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: var(--neon-purple);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text-shadow: 0 0 30px var(--neon-purple);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin: 20px 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .lane-guide {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; position: absolute;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bottom: 30%;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; width: 100%;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; display: flex;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; justify-content: center;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; opacity: 0.2;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pointer-events: none;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; .lane-guide div {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; width: 2px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; height: 20px;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; background: var(--neon-blue);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; margin: 0 8vw;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; box-shadow: 0 0 10px var(--neon-blue);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;/style&gt;</span></p><p class="c2"><span class="c0">&lt;/head&gt;</span></p><p class="c2"><span class="c0">&lt;body&gt;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;!-- 3D Canvas Container --&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;div id=&quot;game-container&quot;&gt;&lt;/div&gt;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;!-- UI Overlay --&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;div id=&quot;ui-layer&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;hud-header&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;artist-credit&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Of Us</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;span&gt;DELROGUE&lt;/span&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;score-box&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;score-label&quot;&gt;TIME ALIVE&lt;/div&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;score-val&quot; id=&quot;hud-score&quot;&gt;0.00&lt;/div&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;!-- Lane Markers --&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;lane-guide&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div&gt;&lt;/div&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div&gt;&lt;/div&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;!-- Touch Controls --&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;controls-area&quot; id=&quot;touch-controls&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;dpad-btn&quot; id=&quot;btn-left&quot;&gt;&larr;&lt;/div&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;dpad-btn&quot; id=&quot;btn-right&quot;&gt;&rarr;&lt;/div&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;!-- Start Menu --&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;div id=&quot;start-screen&quot; class=&quot;menu-screen&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;h1&gt;OF US&lt;/h1&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;h2&gt;LET ME GO&lt;/h2&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;upload-grid&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;!-- Audio Selector --&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;track-selector&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;label&gt;&#127925; Select Soundtrack&lt;/label&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;select id=&quot;track-select&quot; class=&quot;cyber-select&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;option value=&quot;Of%20Us.mp3&quot;&gt;Of Us (Original Mix)&lt;/option&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;option value=&quot;Of%20Us%20Neuro.mp3&quot;&gt;Of Us (Neuro Remix)&lt;/option&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;option value=&quot;Of%20Us%20(dance).mp3&quot;&gt;Of Us (Stepper Remix)&lt;/option&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/select&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;span class=&quot;file-status&quot; id=&quot;status-audio&quot;&gt;Loading track...&lt;/span&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;label class=&quot;upload-btn&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;span&gt;&#128248; Player Image (You)&lt;/span&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;span class=&quot;file-status&quot; id=&quot;status-you&quot;&gt;Default: Green Cube&lt;/span&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;input type=&quot;file&quot; id=&quot;input-you&quot; accept=&quot;image/*&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/label&gt;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;label class=&quot;upload-btn&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;span&gt;&#128248; Avoid Image (Ex)&lt;/span&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;span class=&quot;file-status&quot; id=&quot;status-ex&quot;&gt;Default: Red Cube&lt;/span&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;input type=&quot;file&quot; id=&quot;input-ex&quot; accept=&quot;image/*&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/label&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;button class=&quot;start-btn&quot; id=&quot;btn-start&quot; disabled&gt;LOADING...&lt;/button&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;p style=&quot;margin-top:20px; font-size: 0.8rem; color: #888;&quot;&gt;Avoid ALL memories (images). Use Arrow Keys or On-Screen buttons.&lt;/p&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;!-- Game Over Menu --&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;div id=&quot;game-over-screen&quot; class=&quot;menu-screen hidden&quot;&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;h1&gt;CRASHED&lt;/h1&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;h2&gt;LOST IN THE RAIN&lt;/h2&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;div class=&quot;final-score&quot; id=&quot;final-score&quot;&gt;0.00&lt;/div&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &lt;button class=&quot;start-btn&quot; id=&quot;btn-restart&quot;&gt;RESTART&lt;/button&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &lt;/div&gt;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&lt;script&gt;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; /**</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp;* OF US - CYBERPUNK RACING GAME</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp;* Powered by Three.js</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp;* Featuring &quot;Of Us&quot; by Delrogue</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp;* Let Me Go - Sloped Roof, Neon, Rain, Multi-track Audio</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp;*/</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; // --- CONFIGURATION ---</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; const CONFIG = {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; laneWidth: 3.5,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; laneCount: 3,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; speedBase: 0.4,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; speedMax: 1.4, </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; speedIncrement: 0.0001,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; obstacleSpawnRate: 60,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; colors: {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; road: 0x050505, </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; grid: 0xff00ff, // Bright Neon Pink</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; fog: 0x020205, </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; car: 0x00f3ff,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; rain: 0xaaaaaa</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; };</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; // --- GLOBAL VARIABLES ---</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let scene, camera, renderer;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let playerCar, roadGrid, environmentParticles, rainSystem;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let obstacles = [];</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let clock = new THREE.Clock();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; // Game State</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let isGameActive = false;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let score = 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let speed = CONFIG.speedBase;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let frameCount = 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let currentLane = 1; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let targetX = 0;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; // Assets</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; const textureLoader = new THREE.TextureLoader();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let textureYou = null;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let textureEx = null;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let audioContext, audioBuffer, audioSource, audioAnalyser, dataArray;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; let isAudioPlaying = false;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; // HTML Elements</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; const hudScore = document.getElementById(&#39;hud-score&#39;);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; const finalScore = document.getElementById(&#39;final-score&#39;);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; const startScreen = document.getElementById(&#39;start-screen&#39;);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; const gameOverScreen = document.getElementById(&#39;game-over-screen&#39;);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; const btnStart = document.getElementById(&#39;btn-start&#39;);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; const trackSelect = document.getElementById(&#39;track-select&#39;);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; const statusAudio = document.getElementById(&#39;status-audio&#39;);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; // --- INITIALIZATION ---</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function init() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Scene Setup</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; scene = new THREE.Scene();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; scene.background = new THREE.Color(CONFIG.colors.fog);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; scene.fog = new THREE.FogExp2(CONFIG.colors.fog, 0.035);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Camera</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; camera.position.set(0, 3, 6);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; camera.lookAt(0, 0, -5);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Renderer</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; renderer.setSize(window.innerWidth, window.innerHeight);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;game-container&#39;).appendChild(renderer.domElement);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Lighting</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const ambientLight = new THREE.AmbientLight(0xffffff, 0.3); </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; scene.add(ambientLight);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; dirLight.position.set(5, 10, 7);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; scene.add(dirLight);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // --- WORLD GENERATION ---</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; createRoad();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; createPlayerCar();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; createEnvironment(); </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; createRain(); </span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // --- EVENT LISTENERS ---</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; window.addEventListener(&#39;resize&#39;, onWindowResize, false);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.addEventListener(&#39;keydown&#39;, onKeyDown);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;btn-left&#39;).addEventListener(&#39;pointerdown&#39;, (e) =&gt; { e.preventDefault(); changeLane(-1); });</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;btn-right&#39;).addEventListener(&#39;pointerdown&#39;, (e) =&gt; { e.preventDefault(); changeLane(1); });</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;btn-start&#39;).addEventListener(&#39;click&#39;, startGame);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;btn-restart&#39;).addEventListener(&#39;click&#39;, resetGame);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Listen for track changes</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; trackSelect.addEventListener(&#39;change&#39;, (e) =&gt; {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; loadTrack(e.target.value);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; });</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; setupFileInputs();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // --- LOAD INITIAL TRACK ---</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; loadTrack(trackSelect.value);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; animate();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; // --- RAIN SYSTEM ---</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function createRain() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const rainCount = 15000;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const rainGeo = new THREE.BufferGeometry();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const positions = new Float32Array(rainCount * 3);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; for(let i=0; i&lt;rainCount; i++) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; positions[i*3] = (Math.random() - 0.5) * 100; // x</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; positions[i*3+1] = Math.random() * 60; // y</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; positions[i*3+2] = (Math.random() - 0.5) * 60 - 10; // z</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; rainGeo.setAttribute(&#39;position&#39;, new THREE.BufferAttribute(positions, 3));</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const rainMat = new THREE.PointsMaterial({</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: 0xaaaaaa,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; size: 0.1,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; transparent: true,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; opacity: 0.6</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; });</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; rainSystem = new THREE.Points(rainGeo, rainMat);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; scene.add(rainSystem);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; // --- ASSET LOADING ---</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function loadTrack(filename) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; statusAudio.innerText = &quot;Fetching track...&quot;;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; statusAudio.style.color = &quot;white&quot;;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; btnStart.disabled = true;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; btnStart.innerText = &quot;LOADING...&quot;;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; fetch(filename)</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .then(response =&gt; {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (!response.ok) throw new Error(&quot;HTTP error &quot; + response.status);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return response.arrayBuffer();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; })</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .then(arrayBuffer =&gt; {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; initAudio(arrayBuffer);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; statusAudio.innerText = &quot;Ready: &quot; + decodeURIComponent(filename);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; statusAudio.style.color = &quot;#00f3ff&quot;;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; btnStart.disabled = false;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; btnStart.innerText = &quot;DRIVE&quot;;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; })</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .catch(err =&gt; {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; console.warn(&quot;Track load failed.&quot;, err);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; statusAudio.innerText = &quot;Error: File not found in Repo&quot;;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; statusAudio.style.color = &quot;#ff0055&quot;;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; btnStart.disabled = false;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; btnStart.innerText = &quot;DRIVE (NO MUSIC)&quot;;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function setupFileInputs() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;input-you&#39;).addEventListener(&#39;change&#39;, function(e) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const file = e.target.files[0];</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if(file) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const reader = new FileReader();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; reader.onload = function(ev) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; textureYou = textureLoader.load(ev.target.result);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;status-you&#39;).innerText = &quot;Image Loaded!&quot;;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;status-you&#39;).style.color = &quot;#00f3ff&quot;;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; };</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; reader.readAsDataURL(file);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; });</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;input-ex&#39;).addEventListener(&#39;change&#39;, function(e) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const file = e.target.files[0];</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if(file) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const reader = new FileReader();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; reader.onload = function(ev) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; textureEx = textureLoader.load(ev.target.result);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;status-ex&#39;).innerText = &quot;Image Loaded!&quot;;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document.getElementById(&#39;status-ex&#39;).style.color = &quot;#00f3ff&quot;;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; };</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; reader.readAsDataURL(file);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; });</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function initAudio(arrayBuffer) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; audioContext = new (window.AudioContext || window.webkitAudioContext)();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; audioContext.decodeAudioData(arrayBuffer, function(buffer) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; audioBuffer = buffer;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; audioAnalyser = audioContext.createAnalyser();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; audioAnalyser.fftSize = 64;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dataArray = new Uint8Array(audioAnalyser.frequencyBinCount);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; });</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function playAudio() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (audioContext &amp;&amp; audioBuffer) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (audioContext.state === &#39;suspended&#39;) audioContext.resume();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (audioSource) audioSource.stop();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; audioSource = audioContext.createBufferSource();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; audioSource.buffer = audioBuffer;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; audioSource.loop = true;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; audioSource.connect(audioAnalyser);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; audioAnalyser.connect(audioContext.destination);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; audioSource.start(0);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; isAudioPlaying = true;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function stopAudio() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (audioSource) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; audioSource.stop();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; isAudioPlaying = false;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; // --- GAME OBJECTS ---</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function createRoad() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const geometry = new THREE.PlaneGeometry(200, 400, 40, 40);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const material = new THREE.MeshBasicMaterial({ </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: 0xff00ff, </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; wireframe: true,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; transparent: true,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; opacity: 0.8 // Bright Fluorescent Grid</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; });</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; roadGrid = new THREE.Mesh(geometry, material);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; roadGrid.rotation.x = -Math.PI / 2;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; roadGrid.position.z = -100;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; scene.add(roadGrid);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const floorGeo = new THREE.PlaneGeometry(200, 400);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const floorMat = new THREE.MeshPhongMaterial({ </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: 0x050505,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; shininess: 50, // Shiny wet road effect</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; specular: 0x111111</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; });</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const floor = new THREE.Mesh(floorGeo, floorMat);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; floor.rotation.x = -Math.PI / 2;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; floor.position.y = -0.1;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; floor.position.z = -100;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; scene.add(floor);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function createPlayerCar() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; playerCar = new THREE.Group();</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // 1. Main Chassis (Sleek Futuristic Body)</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const chassisGeo = new THREE.BoxGeometry(1.4, 0.3, 3.0);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const chassisMat = new THREE.MeshStandardMaterial({ </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: 0x111111, </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; roughness: 0.2, </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; metalness: 0.8 </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }); </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const chassis = new THREE.Mesh(chassisGeo, chassisMat);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; chassis.position.y = 0.4;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; playerCar.add(chassis);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Glowing Wireframe for Chassis</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const chassisEdges = new THREE.EdgesGeometry(chassisGeo);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const wireframeMat = new THREE.LineBasicMaterial({ color: CONFIG.colors.car, linewidth: 2 });</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const chassisWire = new THREE.LineSegments(chassisEdges, wireframeMat);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; chassis.add(chassisWire);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // 2. Cockpit (Aerodynamic/Diagonal)</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Define the side profile shape (Trapezoid for futuristic look)</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const cockpitShape = new THREE.Shape();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Drawing in X-Y plane which we will rotate to be Z-Y</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Coordinates: x (length), y (height)</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; cockpitShape.moveTo(-0.6, 0); &nbsp; // Rear Bottom</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; cockpitShape.lineTo(0.6, 0); &nbsp; &nbsp;// Front Bottom</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; cockpitShape.lineTo(0.4, 0.45); // Front Top (Sloped windshield)</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; cockpitShape.lineTo(-0.4, 0.45);// Rear Top (Sloped rear window)</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; cockpitShape.lineTo(-0.6, 0); &nbsp; // Close shape</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const extrudeSettings = {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; steps: 1,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; depth: 0.8, // Car Width</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bevelEnabled: false</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; };</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const cockpitGeo = new THREE.ExtrudeGeometry(cockpitShape, extrudeSettings);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; cockpitGeo.center(); // Center the geometry geometry</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const cockpitMat = new THREE.MeshBasicMaterial({ color: 0x000000 }); </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const cockpit = new THREE.Mesh(cockpitGeo, cockpitMat);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Rotate so the profile is along the length of the car (Z axis)</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; cockpit.rotation.y = -Math.PI / 2; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; cockpit.position.set(0, 0.75, 0); </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; playerCar.add(cockpit);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Cockpit Wireframe (Following the new angled shape)</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const cockpitEdges = new THREE.EdgesGeometry(cockpitGeo);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const cockpitWire = new THREE.LineSegments(cockpitEdges, new THREE.LineBasicMaterial({ color: 0xff00ff }));</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; cockpit.add(cockpitWire);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // 3. Neon Wheels (Hover pads)</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const wheelGeo = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 16);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; wheelGeo.rotateZ(Math.PI / 2);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // MeshBasicMaterial glows in dark</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const wheelMat = new THREE.MeshBasicMaterial({ color: CONFIG.colors.car });</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const positions = [</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-0.8, 0.3, 1.0], [0.8, 0.3, 1.0], // Front</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [-0.8, 0.3, -1.0], [0.8, 0.3, -1.0] // Rear</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; ];</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; positions.forEach(pos =&gt; {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const wheel = new THREE.Mesh(wheelGeo, wheelMat);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; wheel.position.set(...pos);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; playerCar.add(wheel);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; });</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // 4. Rear Engine Glow</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const engineGeo = new THREE.BoxGeometry(1.0, 0.2, 0.1);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const engineMat = new THREE.MeshBasicMaterial({ color: 0xff0055 }); // Bright Pink/Red</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const engine = new THREE.Mesh(engineGeo, engineMat);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; engine.position.set(0, 0.5, 1.51);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; playerCar.add(engine);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // 5. Underglow Light (Stronger)</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const light = new THREE.PointLight(CONFIG.colors.car, 2, 8);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; light.position.set(0, 0.5, 0);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; playerCar.add(light);</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; scene.add(playerCar);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function createEnvironment() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const geometry = new THREE.BufferGeometry();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const count = 500;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const positions = new Float32Array(count * 3);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; for(let i = 0; i &lt; count; i++) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; positions[i*3] = (Math.random() - 0.5) * 100; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; positions[i*3+1] = Math.random() * 30; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; positions[i*3+2] = -Math.random() * 100 - 10; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; geometry.setAttribute(&#39;position&#39;, new THREE.BufferAttribute(positions, 3));</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const material = new THREE.PointsMaterial({ color: 0x555555, size: 0.2 });</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; environmentParticles = new THREE.Points(geometry, material);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; scene.add(environmentParticles);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function spawnObstacle() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const type = Math.random() &gt; 0.5 ? &#39;you&#39; : &#39;ex&#39;;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; let material;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (type === &#39;you&#39; &amp;&amp; textureYou) material = new THREE.MeshBasicMaterial({ map: textureYou });</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; else if (type === &#39;ex&#39; &amp;&amp; textureEx) material = new THREE.MeshBasicMaterial({ map: textureEx });</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; else material = new THREE.MeshPhongMaterial({ </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color: type === &#39;you&#39; ? 0x00ff00 : 0xff0000,</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; emissive: type === &#39;you&#39; ? 0x004400 : 0x440000</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; });</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const geometry = new THREE.BoxGeometry(2, 2, 2);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const mesh = new THREE.Mesh(geometry, material);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Anti-camping patch: Increased right lane spawn rate</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const rand = Math.random();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; let lane;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (rand &lt; 0.3) lane = 0; &nbsp; &nbsp; &nbsp; // 30% chance Left</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; else if (rand &lt; 0.6) lane = 1; &nbsp;// 30% chance Center</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; else lane = 2; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// 40% chance Right</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; mesh.position.set((lane - 1) * CONFIG.laneWidth, 1, -80);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; mesh.userData = { active: true, lane: lane };</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; scene.add(mesh);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; obstacles.push(mesh);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; // --- GAMEPLAY LOGIC ---</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function changeLane(direction) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (!isGameActive) return;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; const nextLane = currentLane + direction;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (nextLane &gt;= 0 &amp;&amp; nextLane &lt; CONFIG.laneCount) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; currentLane = nextLane;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; targetX = (currentLane - 1) * CONFIG.laneWidth;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function onKeyDown(e) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (e.key === &#39;ArrowLeft&#39;) changeLane(-1);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (e.key === &#39;ArrowRight&#39;) changeLane(1);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function update() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (!isGameActive) return;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; speed += CONFIG.speedIncrement;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if(speed &gt; CONFIG.speedMax) speed = CONFIG.speedMax;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Road Animation</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; roadGrid.position.z += speed;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (roadGrid.position.z &gt; -80) roadGrid.position.z = -100;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // --- RAIN ANIMATION ---</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if(rainSystem) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const positions = rainSystem.geometry.attributes.position.array;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; for(let i=0; i&lt;positions.length; i+=3) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; positions[i+1] -= 0.5 + Math.random() * 0.2;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; positions[i+2] += speed * 2; </span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (positions[i+1] &lt; 0 || positions[i+2] &gt; 10) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; positions[i] = (Math.random() - 0.5) * 100; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; positions[i+1] = 40 + Math.random() * 20; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; positions[i+2] = -50 - Math.random() * 50; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; rainSystem.geometry.attributes.position.needsUpdate = true;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; // Music Visualizer</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (isAudioPlaying &amp;&amp; audioAnalyser) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; audioAnalyser.getByteFrequencyData(dataArray);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; const avg = dataArray.reduce((a,b)=&gt;a+b,0) / dataArray.length;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if(avg &gt; 100) roadGrid.material.color.setHex(0xffffff);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; else roadGrid.material.color.setHex(CONFIG.colors.grid);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; playerCar.position.x += (targetX - playerCar.position.x) * 0.1;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; playerCar.rotation.z = (targetX - playerCar.position.x) * -0.1;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; playerCar.position.y = 0.5 + Math.sin(clock.getElapsedTime() * 10) * 0.05;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; frameCount++;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; if (frameCount % Math.floor(CONFIG.obstacleSpawnRate / speed) === 0) spawnObstacle();</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; for (let i = obstacles.length - 1; i &gt;= 0; i--) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; let ob = obstacles[i];</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ob.position.z += speed;</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (ob.position.z &gt; -2 &amp;&amp; ob.position.z &lt; 2) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (Math.abs(ob.position.x - playerCar.position.x) &lt; 1.8) gameOver();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (ob.position.z &gt; 10) {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; scene.remove(ob);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; obstacles.splice(i, 1);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; score += speed * 0.1;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; hudScore.innerText = score.toFixed(2);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function render() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; renderer.render(scene, camera);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function animate() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; requestAnimationFrame(animate);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; update();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; render();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function startGame() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; startScreen.classList.add(&#39;hidden&#39;);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; gameOverScreen.classList.add(&#39;hidden&#39;);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; score = 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; speed = CONFIG.speedBase;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; frameCount = 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; currentLane = 1;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; targetX = 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; playerCar.position.x = 0;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; </span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; obstacles.forEach(ob =&gt; scene.remove(ob));</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; obstacles = [];</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; isGameActive = true;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; playAudio();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function gameOver() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; isGameActive = false;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; finalScore.innerText = score.toFixed(2);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; gameOverScreen.classList.remove(&#39;hidden&#39;);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; stopAudio();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function resetGame() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; startGame();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; function onWindowResize() {</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; camera.aspect = window.innerWidth / window.innerHeight;</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; camera.updateProjectionMatrix();</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; &nbsp; renderer.setSize(window.innerWidth, window.innerHeight);</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; }</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&nbsp; &nbsp; init();</span></p><p class="c1"><span class="c0"></span></p><p class="c2"><span class="c0">&lt;/script&gt;</span></p><p class="c2"><span class="c0">&lt;/body&gt;</span></p><p class="c2"><span class="c0">&lt;/html&gt;</span></p></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Of Us · Let Me Go</title>
+    <!-- Import Google Font for Cyberpunk look -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ff;
+            --neon-purple: #bc13fe;
+            --bg-dark: #020205; 
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: var(--bg-dark);
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            touch-action: none; /* Prevent scroll on mobile */
+        }
+
+        #game-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        /* UI OVERLAY */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none; /* Let clicks pass through to controls if needed */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* HEADER / SCORE */
+        .hud-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+        }
+
+        .score-box {
+            text-align: right;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: var(--neon-blue);
+            letter-spacing: 2px;
+        }
+
+        .score-val {
+            font-size: 2rem;
+            font-weight: 900;
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .artist-credit {
+            font-size: 0.9rem;
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px var(--neon-pink);
+            border-left: 3px solid var(--neon-purple);
+            padding-left: 10px;
+        }
+
+        .artist-credit span {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* MENUS */
+        .menu-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 2, 5, 0.9); /* Darker opacity */
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            z-index: 20;
+            transition: opacity 0.3s;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-transform: uppercase;
+            margin: 0;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(188, 19, 254, 0.5);
+            text-align: center;
+            line-height: 1;
+        }
+
+        h2 {
+            font-size: 1rem;
+            color: white;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+            text-align: center;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            width: 90%;
+            max-width: 400px;
+            margin-bottom: 30px;
+        }
+
+        /* CUSTOM SELECTOR STYLE */
+        .track-selector {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--neon-blue);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .track-selector label {
+            color: var(--neon-blue);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .cyber-select {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--neon-purple);
+            color: white;
+            padding: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .cyber-select:focus {
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .upload-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--neon-blue);
+            padding: 15px;
+            border-radius: 8px;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .upload-btn input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .upload-btn.locked {
+            border-color: var(--neon-purple);
+            color: var(--neon-purple);
+            pointer-events: none;
+            background: rgba(188, 19, 254, 0.1);
+        }
+
+        .file-status {
+            font-size: 0.7rem;
+            color: white;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .start-btn {
+            background: var(--neon-pink);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--neon-pink);
+            text-transform: uppercase;
+            transition: transform 0.1s;
+        }
+        
+        .start-btn:disabled {
+            background: #555;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .start-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* TOUCH CONTROLS */
+        .controls-area {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            pointer-events: auto;
+            margin-bottom: 20px;
+        }
+
+        .dpad-btn {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            backdrop-filter: blur(4px);
+            transition: 0.1s;
+        }
+        
+        .dpad-btn:active {
+            background: var(--neon-blue);
+            color: black;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        /* GAME OVER MODAL */
+        #game-over-screen {
+            z-index: 30;
+        }
+        
+        .final-score {
+            font-size: 4rem;
+            color: var(--neon-purple);
+            text-shadow: 0 0 30px var(--neon-purple);
+            margin: 20px 0;
+        }
+
+        .lane-guide {
+            position: absolute;
+            bottom: 30%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+        .lane-guide div {
+            width: 2px;
+            height: 20px;
+            background: var(--neon-blue);
+            margin: 0 8vw;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 3D Canvas Container -->
+    <div id="game-container"></div>
+
+    <!-- UI Overlay -->
+    <div id="ui-layer">
+        <div class="hud-header">
+            <div class="artist-credit">
+                Of Us
+                <span>DELROGUE</span>
+            </div>
+            <div class="score-box">
+                <div class="score-label">TIME ALIVE</div>
+                <div class="score-val" id="hud-score">0.00</div>
+            </div>
+        </div>
+
+        <!-- Lane Markers -->
+        <div class="lane-guide">
+            <div></div>
+            <div></div>
+        </div>
+
+        <!-- Touch Controls -->
+        <div class="controls-area" id="touch-controls">
+            <div class="dpad-btn" id="btn-left">←</div>
+            <div class="dpad-btn" id="btn-right">→</div>
+        </div>
+    </div>
+
+    <!-- Start Menu -->
+    <div id="start-screen" class="menu-screen">
+        <h1>OF US</h1>
+        <h2>LET ME GO</h2>
+        
+        <div class="upload-grid">
+            <!-- Audio Selector -->
+            <div class="track-selector">
+                <label>🎵 Select Soundtrack</label>
+                <select id="track-select" class="cyber-select">
+                    <option value="Of%20Us.mp3">Of Us (Original Mix)</option>
+                    <option value="Of%20Us%20Neuro.mp3">Of Us (Neuro Remix)</option>
+                    <option value="Of%20Us%20(dance).mp3">Of Us (Stepper Remix)</option>
+                </select>
+                <span class="file-status" id="status-audio">Loading track...</span>
+            </div>
+            
+            <label class="upload-btn">
+                <span>📸 Player Image (You)</span>
+                <span class="file-status" id="status-you">Default: Green Cube</span>
+                <input type="file" id="input-you" accept="image/*">
+            </label>
+
+            <label class="upload-btn">
+                <span>📸 Avoid Image (Ex)</span>
+                <span class="file-status" id="status-ex">Default: Red Cube</span>
+                <input type="file" id="input-ex" accept="image/*">
+            </label>
+        </div>
+
+        <button class="start-btn" id="btn-start" disabled>LOADING...</button>
+        <p style="margin-top:20px; font-size: 0.8rem; color: #888;">Avoid ALL memories (images). Use Arrow Keys or On-Screen buttons.</p>
+    </div>
+
+    <!-- Game Over Menu -->
+    <div id="game-over-screen" class="menu-screen hidden">
+        <h1>CRASHED</h1>
+        <h2>LOST IN THE RAIN</h2>
+        <div class="final-score" id="final-score">0.00</div>
+        <button class="start-btn" id="btn-restart">RESTART</button>
+    </div>
+
+<script>
+    /**
+     * OF US - CYBERPUNK RACING GAME
+     * Powered by Three.js
+     * Featuring "Of Us" by Delrogue
+     * Let Me Go - Sloped Roof, Neon, Rain, Multi-track Audio
+     */
+
+    // --- CONFIGURATION ---
+    const CONFIG = {
+        laneWidth: 3.5,
+        laneCount: 3,
+        speedBase: 0.4,
+        speedMax: 1.4, 
+        speedIncrement: 0.0001,
+        obstacleSpawnRate: 60,
+        colors: {
+            road: 0x050505, 
+            grid: 0xff00ff, // Bright Neon Pink
+            fog: 0x020205, 
+            car: 0x00f3ff,
+            rain: 0xaaaaaa
+        }
+    };
+
+    // --- GLOBAL VARIABLES ---
+    let scene, camera, renderer;
+    let playerCar, roadGrid, environmentParticles, rainSystem;
+    let obstacles = [];
+    let clock = new THREE.Clock();
+    
+    // Game State
+    let isGameActive = false;
+    let score = 0;
+    let speed = CONFIG.speedBase;
+    let frameCount = 0;
+    let currentLane = 1; 
+    let targetX = 0;
+
+    // Assets
+    const textureLoader = new THREE.TextureLoader();
+    let textureYou = null;
+    let textureEx = null;
+    let audioContext, audioBuffer, audioSource, audioAnalyser, dataArray;
+    let isAudioPlaying = false;
+
+    // HTML Elements
+    const hudScore = document.getElementById('hud-score');
+    const finalScore = document.getElementById('final-score');
+    const startScreen = document.getElementById('start-screen');
+    const gameOverScreen = document.getElementById('game-over-screen');
+    const btnStart = document.getElementById('btn-start');
+    const trackSelect = document.getElementById('track-select');
+    const statusAudio = document.getElementById('status-audio');
+
+    // --- INITIALIZATION ---
+    function init() {
+        // Scene Setup
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(CONFIG.colors.fog);
+        scene.fog = new THREE.FogExp2(CONFIG.colors.fog, 0.035);
+
+        // Camera
+        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 3, 6);
+        camera.lookAt(0, 0, -5);
+
+        // Renderer
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        document.getElementById('game-container').appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3); 
+        scene.add(ambientLight);
+        
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        dirLight.position.set(5, 10, 7);
+        scene.add(dirLight);
+
+        // --- WORLD GENERATION ---
+        createRoad();
+        createPlayerCar();
+        createEnvironment(); 
+        createRain(); 
+
+        // --- EVENT LISTENERS ---
+        window.addEventListener('resize', onWindowResize, false);
+        document.addEventListener('keydown', onKeyDown);
+        
+        document.getElementById('btn-left').addEventListener('pointerdown', (e) => { e.preventDefault(); changeLane(-1); });
+        document.getElementById('btn-right').addEventListener('pointerdown', (e) => { e.preventDefault(); changeLane(1); });
+
+        document.getElementById('btn-start').addEventListener('click', startGame);
+        document.getElementById('btn-restart').addEventListener('click', resetGame);
+        
+        // Listen for track changes
+        trackSelect.addEventListener('change', (e) => {
+            loadTrack(e.target.value);
+        });
+
+        setupFileInputs();
+        
+        // --- LOAD INITIAL TRACK ---
+        loadTrack(trackSelect.value);
+
+        animate();
+    }
+
+    // --- RAIN SYSTEM ---
+    function createRain() {
+        const rainCount = 15000;
+        const rainGeo = new THREE.BufferGeometry();
+        const positions = new Float32Array(rainCount * 3);
+
+        for(let i=0; i<rainCount; i++) {
+            positions[i*3] = (Math.random() - 0.5) * 100; // x
+            positions[i*3+1] = Math.random() * 60; // y
+            positions[i*3+2] = (Math.random() - 0.5) * 60 - 10; // z
+        }
+
+        rainGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        
+        const rainMat = new THREE.PointsMaterial({
+            color: 0xaaaaaa,
+            size: 0.1,
+            transparent: true,
+            opacity: 0.6
+        });
+
+        rainSystem = new THREE.Points(rainGeo, rainMat);
+        scene.add(rainSystem);
+    }
+
+    // --- ASSET LOADING ---
+    function loadTrack(filename) {
+        statusAudio.innerText = "Fetching track...";
+        statusAudio.style.color = "white";
+        btnStart.disabled = true;
+        btnStart.innerText = "LOADING...";
+
+        fetch(filename)
+            .then(response => {
+                if (!response.ok) throw new Error("HTTP error " + response.status);
+                return response.arrayBuffer();
+            })
+            .then(arrayBuffer => {
+                initAudio(arrayBuffer);
+                statusAudio.innerText = "Ready: " + decodeURIComponent(filename);
+                statusAudio.style.color = "#00f3ff";
+                btnStart.disabled = false;
+                btnStart.innerText = "DRIVE";
+            })
+            .catch(err => {
+                console.warn("Track load failed.", err);
+                statusAudio.innerText = "Error: File not found in Repo";
+                statusAudio.style.color = "#ff0055";
+                btnStart.disabled = false;
+                btnStart.innerText = "DRIVE (NO MUSIC)";
+            });
+    }
+
+    function setupFileInputs() {
+        document.getElementById('input-you').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    textureYou = textureLoader.load(ev.target.result);
+                    document.getElementById('status-you').innerText = "Image Loaded!";
+                    document.getElementById('status-you').style.color = "#00f3ff";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('input-ex').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    textureEx = textureLoader.load(ev.target.result);
+                    document.getElementById('status-ex').innerText = "Image Loaded!";
+                    document.getElementById('status-ex').style.color = "#00f3ff";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    function initAudio(arrayBuffer) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        audioContext.decodeAudioData(arrayBuffer, function(buffer) {
+            audioBuffer = buffer;
+            audioAnalyser = audioContext.createAnalyser();
+            audioAnalyser.fftSize = 64;
+            dataArray = new Uint8Array(audioAnalyser.frequencyBinCount);
+        });
+    }
+
+    function playAudio() {
+        if (audioContext && audioBuffer) {
+            if (audioContext.state === 'suspended') audioContext.resume();
+            if (audioSource) audioSource.stop();
+            audioSource = audioContext.createBufferSource();
+            audioSource.buffer = audioBuffer;
+            audioSource.loop = true;
+            audioSource.connect(audioAnalyser);
+            audioAnalyser.connect(audioContext.destination);
+            audioSource.start(0);
+            isAudioPlaying = true;
+        }
+    }
+
+    function stopAudio() {
+        if (audioSource) {
+            audioSource.stop();
+            isAudioPlaying = false;
+        }
+    }
+
+    // --- GAME OBJECTS ---
+    function createRoad() {
+        const geometry = new THREE.PlaneGeometry(200, 400, 40, 40);
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0xff00ff, 
+            wireframe: true,
+            transparent: true,
+            opacity: 0.8 // Bright Fluorescent Grid
+        });
+        
+        roadGrid = new THREE.Mesh(geometry, material);
+        roadGrid.rotation.x = -Math.PI / 2;
+        roadGrid.position.z = -100;
+        scene.add(roadGrid);
+
+        const floorGeo = new THREE.PlaneGeometry(200, 400);
+        const floorMat = new THREE.MeshPhongMaterial({ 
+            color: 0x050505,
+            shininess: 50, // Shiny wet road effect
+            specular: 0x111111
+        });
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.rotation.x = -Math.PI / 2;
+        floor.position.y = -0.1;
+        floor.position.z = -100;
+        scene.add(floor);
+    }
+
+    function createPlayerCar() {
+        playerCar = new THREE.Group();
+
+        // 1. Main Chassis (Sleek Futuristic Body)
+        const chassisGeo = new THREE.BoxGeometry(1.4, 0.3, 3.0);
+        const chassisMat = new THREE.MeshStandardMaterial({ 
+            color: 0x111111, 
+            roughness: 0.2, 
+            metalness: 0.8 
+        }); 
+        const chassis = new THREE.Mesh(chassisGeo, chassisMat);
+        chassis.position.y = 0.4;
+        playerCar.add(chassis);
+
+        // Glowing Wireframe for Chassis
+        const chassisEdges = new THREE.EdgesGeometry(chassisGeo);
+        const wireframeMat = new THREE.LineBasicMaterial({ color: CONFIG.colors.car, linewidth: 2 });
+        const chassisWire = new THREE.LineSegments(chassisEdges, wireframeMat);
+        chassis.add(chassisWire);
+
+        // 2. Cockpit (Aerodynamic/Diagonal)
+        // Define the side profile shape (Trapezoid for futuristic look)
+        const cockpitShape = new THREE.Shape();
+        // Drawing in X-Y plane which we will rotate to be Z-Y
+        // Coordinates: x (length), y (height)
+        cockpitShape.moveTo(-0.6, 0);   // Rear Bottom
+        cockpitShape.lineTo(0.6, 0);    // Front Bottom
+        cockpitShape.lineTo(0.4, 0.45); // Front Top (Sloped windshield)
+        cockpitShape.lineTo(-0.4, 0.45);// Rear Top (Sloped rear window)
+        cockpitShape.lineTo(-0.6, 0);   // Close shape
+
+        const extrudeSettings = {
+            steps: 1,
+            depth: 0.8, // Car Width
+            bevelEnabled: false
+        };
+
+        const cockpitGeo = new THREE.ExtrudeGeometry(cockpitShape, extrudeSettings);
+        cockpitGeo.center(); // Center the geometry geometry
+        
+        const cockpitMat = new THREE.MeshBasicMaterial({ color: 0x000000 }); 
+        const cockpit = new THREE.Mesh(cockpitGeo, cockpitMat);
+        
+        // Rotate so the profile is along the length of the car (Z axis)
+        cockpit.rotation.y = -Math.PI / 2; 
+        cockpit.position.set(0, 0.75, 0); 
+        playerCar.add(cockpit);
+
+        // Cockpit Wireframe (Following the new angled shape)
+        const cockpitEdges = new THREE.EdgesGeometry(cockpitGeo);
+        const cockpitWire = new THREE.LineSegments(cockpitEdges, new THREE.LineBasicMaterial({ color: 0xff00ff }));
+        cockpit.add(cockpitWire);
+
+        // 3. Neon Wheels (Hover pads)
+        const wheelGeo = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 16);
+        wheelGeo.rotateZ(Math.PI / 2);
+        // MeshBasicMaterial glows in dark
+        const wheelMat = new THREE.MeshBasicMaterial({ color: CONFIG.colors.car });
+        
+        const positions = [
+            [-0.8, 0.3, 1.0], [0.8, 0.3, 1.0], // Front
+            [-0.8, 0.3, -1.0], [0.8, 0.3, -1.0] // Rear
+        ];
+
+        positions.forEach(pos => {
+            const wheel = new THREE.Mesh(wheelGeo, wheelMat);
+            wheel.position.set(...pos);
+            playerCar.add(wheel);
+        });
+
+        // 4. Rear Engine Glow
+        const engineGeo = new THREE.BoxGeometry(1.0, 0.2, 0.1);
+        const engineMat = new THREE.MeshBasicMaterial({ color: 0xff0055 }); // Bright Pink/Red
+        const engine = new THREE.Mesh(engineGeo, engineMat);
+        engine.position.set(0, 0.5, 1.51);
+        playerCar.add(engine);
+
+        // 5. Underglow Light (Stronger)
+        const light = new THREE.PointLight(CONFIG.colors.car, 2, 8);
+        light.position.set(0, 0.5, 0);
+        playerCar.add(light);
+
+        scene.add(playerCar);
+    }
+
+    function createEnvironment() {
+        const geometry = new THREE.BufferGeometry();
+        const count = 500;
+        const positions = new Float32Array(count * 3);
+        for(let i = 0; i < count; i++) {
+            positions[i*3] = (Math.random() - 0.5) * 100; 
+            positions[i*3+1] = Math.random() * 30; 
+            positions[i*3+2] = -Math.random() * 100 - 10; 
+        }
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const material = new THREE.PointsMaterial({ color: 0x555555, size: 0.2 });
+        environmentParticles = new THREE.Points(geometry, material);
+        scene.add(environmentParticles);
+    }
+
+    function spawnObstacle() {
+        const type = Math.random() > 0.5 ? 'you' : 'ex';
+        let material;
+        if (type === 'you' && textureYou) material = new THREE.MeshBasicMaterial({ map: textureYou });
+        else if (type === 'ex' && textureEx) material = new THREE.MeshBasicMaterial({ map: textureEx });
+        else material = new THREE.MeshPhongMaterial({ 
+            color: type === 'you' ? 0x00ff00 : 0xff0000,
+            emissive: type === 'you' ? 0x004400 : 0x440000
+        });
+
+        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const mesh = new THREE.Mesh(geometry, material);
+        
+        // Anti-camping patch: Increased right lane spawn rate
+        const rand = Math.random();
+        let lane;
+        if (rand < 0.3) lane = 0;       // 30% chance Left
+        else if (rand < 0.6) lane = 1;  // 30% chance Center
+        else lane = 2;                  // 40% chance Right
+        
+        mesh.position.set((lane - 1) * CONFIG.laneWidth, 1, -80);
+        mesh.userData = { active: true, lane: lane };
+        scene.add(mesh);
+        obstacles.push(mesh);
+    }
+
+    // --- GAMEPLAY LOGIC ---
+    function changeLane(direction) {
+        if (!isGameActive) return;
+        const nextLane = currentLane + direction;
+        if (nextLane >= 0 && nextLane < CONFIG.laneCount) {
+            currentLane = nextLane;
+            targetX = (currentLane - 1) * CONFIG.laneWidth;
+        }
+    }
+
+    function onKeyDown(e) {
+        if (e.key === 'ArrowLeft') changeLane(-1);
+        if (e.key === 'ArrowRight') changeLane(1);
+    }
+
+    function update() {
+        if (!isGameActive) return;
+
+        speed += CONFIG.speedIncrement;
+        if(speed > CONFIG.speedMax) speed = CONFIG.speedMax;
+
+        // Road Animation
+        roadGrid.position.z += speed;
+        if (roadGrid.position.z > -80) roadGrid.position.z = -100;
+
+        // --- RAIN ANIMATION ---
+        if(rainSystem) {
+            const positions = rainSystem.geometry.attributes.position.array;
+            for(let i=0; i<positions.length; i+=3) {
+                positions[i+1] -= 0.5 + Math.random() * 0.2;
+                positions[i+2] += speed * 2; 
+
+                if (positions[i+1] < 0 || positions[i+2] > 10) {
+                    positions[i] = (Math.random() - 0.5) * 100; 
+                    positions[i+1] = 40 + Math.random() * 20; 
+                    positions[i+2] = -50 - Math.random() * 50; 
+                }
+            }
+            rainSystem.geometry.attributes.position.needsUpdate = true;
+        }
+
+        // Music Visualizer
+        if (isAudioPlaying && audioAnalyser) {
+            audioAnalyser.getByteFrequencyData(dataArray);
+            const avg = dataArray.reduce((a,b)=>a+b,0) / dataArray.length;
+            if(avg > 100) roadGrid.material.color.setHex(0xffffff);
+            else roadGrid.material.color.setHex(CONFIG.colors.grid);
+        }
+
+        playerCar.position.x += (targetX - playerCar.position.x) * 0.1;
+        playerCar.rotation.z = (targetX - playerCar.position.x) * -0.1;
+        playerCar.position.y = 0.5 + Math.sin(clock.getElapsedTime() * 10) * 0.05;
+
+        frameCount++;
+        if (frameCount % Math.floor(CONFIG.obstacleSpawnRate / speed) === 0) spawnObstacle();
+
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+            let ob = obstacles[i];
+            ob.position.z += speed;
+
+            if (ob.position.z > -2 && ob.position.z < 2) {
+                if (Math.abs(ob.position.x - playerCar.position.x) < 1.8) gameOver();
+            }
+
+            if (ob.position.z > 10) {
+                scene.remove(ob);
+                obstacles.splice(i, 1);
+            }
+        }
+
+        score += speed * 0.1;
+        hudScore.innerText = score.toFixed(2);
+    }
+
+    function render() {
+        renderer.render(scene, camera);
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        update();
+        render();
+    }
+
+    function startGame() {
+        startScreen.classList.add('hidden');
+        gameOverScreen.classList.add('hidden');
+        
+        score = 0;
+        speed = CONFIG.speedBase;
+        frameCount = 0;
+        currentLane = 1;
+        targetX = 0;
+        playerCar.position.x = 0;
+        
+        obstacles.forEach(ob => scene.remove(ob));
+        obstacles = [];
+
+        isGameActive = true;
+        playAudio();
+    }
+
+    function gameOver() {
+        isGameActive = false;
+        finalScore.innerText = score.toFixed(2);
+        gameOverScreen.classList.remove('hidden');
+        stopAudio();
+    }
+
+    function resetGame() {
+        startGame();
+    }
+
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    init();
+
+</script>
+</body>
+</html>
