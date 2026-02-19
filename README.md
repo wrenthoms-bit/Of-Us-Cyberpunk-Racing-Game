@@ -148,6 +148,40 @@
             margin-bottom: 30px;
         }
 
+        /* CUSTOM SELECTOR STYLE */
+        .track-selector {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--neon-blue);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .track-selector label {
+            color: var(--neon-blue);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .cyber-select {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--neon-purple);
+            color: white;
+            padding: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .cyber-select:focus {
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+
         .upload-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--neon-blue);
@@ -318,13 +352,16 @@
         <h2>AERO EDITION</h2>
         
         <div class="upload-grid">
-            <!-- Audio - Auto Loaded -->
-            <label class="upload-btn" id="btn-audio-wrapper">
-                <span>🎵 Soundtrack</span>
-                <span class="file-status" id="status-audio">Scanning for 'song.mp3'...</span>
-                <!-- Fallback input if auto-load fails -->
-                <input type="file" id="input-audio" accept="audio/*" style="display:none">
-            </label>
+            <!-- Audio Selector -->
+            <div class="track-selector">
+                <label>🎵 Select Soundtrack</label>
+                <select id="track-select" class="cyber-select">
+                    <option value="Of%20Us.mp3">Of Us (Original Mix)</option>
+                    <option value="Of%20Us%20Neuro.mp3">Of Us (Neuro Remix)</option>
+                    <option value="Of%20Us%20(dance).mp3">Of Us (Stepper Remix)</option>
+                </select>
+                <span class="file-status" id="status-audio">Loading track...</span>
+            </div>
             
             <label class="upload-btn">
                 <span>📸 Player Image (You)</span>
@@ -356,7 +393,7 @@
      * OF US - CYBERPUNK RACING GAME
      * Powered by Three.js
      * Featuring "Of Us" by Delrogue
-     * Aero Edition - Sloped Roof, Neon, Rain
+     * Aero Edition - Sloped Roof, Neon, Rain, Multi-track Audio
      */
 
     // --- CONFIGURATION ---
@@ -373,8 +410,7 @@
             fog: 0x020205, 
             car: 0x00f3ff,
             rain: 0xaaaaaa
-        },
-        audioFile: 'song.mp3' 
+        }
     };
 
     // --- GLOBAL VARIABLES ---
@@ -404,13 +440,14 @@
     const startScreen = document.getElementById('start-screen');
     const gameOverScreen = document.getElementById('game-over-screen');
     const btnStart = document.getElementById('btn-start');
+    const trackSelect = document.getElementById('track-select');
+    const statusAudio = document.getElementById('status-audio');
 
     // --- INITIALIZATION ---
     function init() {
         // Scene Setup
         scene = new THREE.Scene();
         scene.background = new THREE.Color(CONFIG.colors.fog);
-        // Reduced fog slightly so the bright grid is visible further out
         scene.fog = new THREE.FogExp2(CONFIG.colors.fog, 0.035);
 
         // Camera
@@ -448,10 +485,15 @@
         document.getElementById('btn-start').addEventListener('click', startGame);
         document.getElementById('btn-restart').addEventListener('click', resetGame);
         
+        // Listen for track changes
+        trackSelect.addEventListener('change', (e) => {
+            loadTrack(e.target.value);
+        });
+
         setupFileInputs();
         
-        // --- LOAD DEFAULT AUDIO ---
-        loadDefaultTrack();
+        // --- LOAD INITIAL TRACK ---
+        loadTrack(trackSelect.value);
 
         animate();
     }
@@ -482,47 +524,34 @@
     }
 
     // --- ASSET LOADING ---
-    function loadDefaultTrack() {
-        const statusEl = document.getElementById('status-audio');
-        const wrapper = document.getElementById('btn-audio-wrapper');
-        
-        fetch(CONFIG.audioFile)
+    function loadTrack(filename) {
+        statusAudio.innerText = "Fetching track...";
+        statusAudio.style.color = "white";
+        btnStart.disabled = true;
+        btnStart.innerText = "LOADING...";
+
+        fetch(filename)
             .then(response => {
                 if (!response.ok) throw new Error("HTTP error " + response.status);
                 return response.arrayBuffer();
             })
             .then(arrayBuffer => {
                 initAudio(arrayBuffer);
-                statusEl.innerText = "Loaded: Of Us (Delrogue)";
-                statusEl.style.color = "#00f3ff";
-                wrapper.classList.add('locked'); 
+                statusAudio.innerText = "Ready: " + decodeURIComponent(filename);
+                statusAudio.style.color = "#00f3ff";
                 btnStart.disabled = false;
                 btnStart.innerText = "DRIVE";
             })
             .catch(err => {
-                console.warn("Auto-load failed.", err);
-                statusEl.innerText = "Missing 'song.mp3' - Tap to upload";
-                document.getElementById('input-audio').style.display = 'block';
+                console.warn("Track load failed.", err);
+                statusAudio.innerText = "Error: File not found in Repo";
+                statusAudio.style.color = "#ff0055";
                 btnStart.disabled = false;
                 btnStart.innerText = "DRIVE (NO MUSIC)";
             });
     }
 
     function setupFileInputs() {
-        document.getElementById('input-audio').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    initAudio(ev.target.result);
-                    document.getElementById('status-audio').innerText = "Loaded: " + file.name;
-                    document.getElementById('status-audio').style.color = "#00f3ff";
-                    btnStart.innerText = "DRIVE";
-                };
-                reader.readAsArrayBuffer(file);
-            }
-        });
-
         document.getElementById('input-you').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(file) {
