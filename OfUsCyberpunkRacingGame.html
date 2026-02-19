@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Of Us · Cyberpunk Racing v2</title>
+    <title>Of Us · Aero Edition</title>
     <!-- Import Google Font for Cyberpunk look -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <!-- Three.js CDN -->
@@ -13,7 +13,7 @@
             --neon-blue: #00f3ff;
             --neon-pink: #ff00ff;
             --neon-purple: #bc13fe;
-            --bg-dark: #050510;
+            --bg-dark: #020205; 
         }
 
         * {
@@ -60,7 +60,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
         }
 
         .score-box {
@@ -101,8 +101,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 5, 16, 0.85);
-            backdrop-filter: blur(5px);
+            background: rgba(2, 2, 5, 0.9); /* Darker opacity */
+            backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -315,7 +315,7 @@
     <!-- Start Menu -->
     <div id="start-screen" class="menu-screen">
         <h1>OF US</h1>
-        <h2>CYBERPUNK RACING</h2>
+        <h2>AERO EDITION</h2>
         
         <div class="upload-grid">
             <!-- Audio - Auto Loaded -->
@@ -346,7 +346,7 @@
     <!-- Game Over Menu -->
     <div id="game-over-screen" class="menu-screen hidden">
         <h1>CRASHED</h1>
-        <h2>THE MEMORIES CAUGHT UP</h2>
+        <h2>LOST IN THE RAIN</h2>
         <div class="final-score" id="final-score">0.00</div>
         <button class="start-btn" id="btn-restart">RESTART</button>
     </div>
@@ -356,6 +356,7 @@
      * OF US - CYBERPUNK RACING GAME
      * Powered by Three.js
      * Featuring "Of Us" by Delrogue
+     * Aero Edition - Sloped Roof, Neon, Rain
      */
 
     // --- CONFIGURATION ---
@@ -363,23 +364,22 @@
         laneWidth: 3.5,
         laneCount: 3,
         speedBase: 0.4,
-        speedMax: 1.2,
+        speedMax: 1.4, 
         speedIncrement: 0.0001,
         obstacleSpawnRate: 60,
         colors: {
-            road: 0x111111,
-            grid: 0xff00ff,
-            fog: 0x050510,
-            car: 0x00f3ff
+            road: 0x050505, 
+            grid: 0xff00ff, // Bright Neon Pink
+            fog: 0x020205, 
+            car: 0x00f3ff,
+            rain: 0xaaaaaa
         },
-        // CHANGED: Simplified filename to avoid web errors
-        // Make sure you rename your file to 'song.mp3' in GitHub!
         audioFile: 'song.mp3' 
     };
 
     // --- GLOBAL VARIABLES ---
     let scene, camera, renderer;
-    let playerCar, roadGrid, environmentParticles;
+    let playerCar, roadGrid, environmentParticles, rainSystem;
     let obstacles = [];
     let clock = new THREE.Clock();
     
@@ -410,7 +410,8 @@
         // Scene Setup
         scene = new THREE.Scene();
         scene.background = new THREE.Color(CONFIG.colors.fog);
-        scene.fog = new THREE.FogExp2(CONFIG.colors.fog, 0.03);
+        // Reduced fog slightly so the bright grid is visible further out
+        scene.fog = new THREE.FogExp2(CONFIG.colors.fog, 0.035);
 
         // Camera
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -424,17 +425,18 @@
         document.getElementById('game-container').appendChild(renderer.domElement);
 
         // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3); 
         scene.add(ambientLight);
         
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
         dirLight.position.set(5, 10, 7);
         scene.add(dirLight);
 
         // --- WORLD GENERATION ---
         createRoad();
         createPlayerCar();
-        createEnvironment();
+        createEnvironment(); 
+        createRain(); 
 
         // --- EVENT LISTENERS ---
         window.addEventListener('resize', onWindowResize, false);
@@ -454,12 +456,36 @@
         animate();
     }
 
+    // --- RAIN SYSTEM ---
+    function createRain() {
+        const rainCount = 15000;
+        const rainGeo = new THREE.BufferGeometry();
+        const positions = new Float32Array(rainCount * 3);
+
+        for(let i=0; i<rainCount; i++) {
+            positions[i*3] = (Math.random() - 0.5) * 100; // x
+            positions[i*3+1] = Math.random() * 60; // y
+            positions[i*3+2] = (Math.random() - 0.5) * 60 - 10; // z
+        }
+
+        rainGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        
+        const rainMat = new THREE.PointsMaterial({
+            color: 0xaaaaaa,
+            size: 0.1,
+            transparent: true,
+            opacity: 0.6
+        });
+
+        rainSystem = new THREE.Points(rainGeo, rainMat);
+        scene.add(rainSystem);
+    }
+
     // --- ASSET LOADING ---
     function loadDefaultTrack() {
         const statusEl = document.getElementById('status-audio');
         const wrapper = document.getElementById('btn-audio-wrapper');
         
-        // Fetch the MP3 file
         fetch(CONFIG.audioFile)
             .then(response => {
                 if (!response.ok) throw new Error("HTTP error " + response.status);
@@ -469,12 +495,12 @@
                 initAudio(arrayBuffer);
                 statusEl.innerText = "Loaded: Of Us (Delrogue)";
                 statusEl.style.color = "#00f3ff";
-                wrapper.classList.add('locked'); // Lock input so they know it's ready
+                wrapper.classList.add('locked'); 
                 btnStart.disabled = false;
                 btnStart.innerText = "DRIVE";
             })
             .catch(err => {
-                console.warn("Auto-load failed. User must upload.", err);
+                console.warn("Auto-load failed.", err);
                 statusEl.innerText = "Missing 'song.mp3' - Tap to upload";
                 document.getElementById('input-audio').style.display = 'block';
                 btnStart.disabled = false;
@@ -483,7 +509,6 @@
     }
 
     function setupFileInputs() {
-        // Fallback Audio Upload
         document.getElementById('input-audio').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(file) {
@@ -498,7 +523,6 @@
             }
         });
 
-        // Image You
         document.getElementById('input-you').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(file) {
@@ -512,7 +536,6 @@
             }
         });
 
-        // Image Ex
         document.getElementById('input-ex').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if(file) {
@@ -539,10 +562,7 @@
 
     function playAudio() {
         if (audioContext && audioBuffer) {
-            // Resume context if suspended (browser autoplay policy)
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-            }
+            if (audioContext.state === 'suspended') audioContext.resume();
             if (audioSource) audioSource.stop();
             audioSource = audioContext.createBufferSource();
             audioSource.buffer = audioBuffer;
@@ -568,7 +588,7 @@
             color: 0xff00ff, 
             wireframe: true,
             transparent: true,
-            opacity: 0.3
+            opacity: 0.8 // Bright Fluorescent Grid
         });
         
         roadGrid = new THREE.Mesh(geometry, material);
@@ -577,7 +597,11 @@
         scene.add(roadGrid);
 
         const floorGeo = new THREE.PlaneGeometry(200, 400);
-        const floorMat = new THREE.MeshBasicMaterial({ color: 0x020205 });
+        const floorMat = new THREE.MeshPhongMaterial({ 
+            color: 0x050505,
+            shininess: 50, // Shiny wet road effect
+            specular: 0x111111
+        });
         const floor = new THREE.Mesh(floorGeo, floorMat);
         floor.rotation.x = -Math.PI / 2;
         floor.position.y = -0.1;
@@ -588,35 +612,91 @@
     function createPlayerCar() {
         playerCar = new THREE.Group();
 
-        const bodyGeo = new THREE.BoxGeometry(1.2, 0.5, 2.5);
-        const bodyMat = new THREE.MeshPhongMaterial({ color: 0x222222, shininess: 100 });
-        const body = new THREE.Mesh(bodyGeo, bodyMat);
-        body.position.y = 0.5;
-        playerCar.add(body);
+        // 1. Main Chassis (Sleek Futuristic Body)
+        const chassisGeo = new THREE.BoxGeometry(1.4, 0.3, 3.0);
+        const chassisMat = new THREE.MeshStandardMaterial({ 
+            color: 0x111111, 
+            roughness: 0.2, 
+            metalness: 0.8 
+        }); 
+        const chassis = new THREE.Mesh(chassisGeo, chassisMat);
+        chassis.position.y = 0.4;
+        playerCar.add(chassis);
 
-        const glowMat = new THREE.MeshBasicMaterial({ color: CONFIG.colors.car });
-        const strip1 = new THREE.Mesh(new THREE.BoxGeometry(1.25, 0.05, 2.55), glowMat);
-        strip1.position.y = 0.3;
-        playerCar.add(strip1);
+        // Glowing Wireframe for Chassis
+        const chassisEdges = new THREE.EdgesGeometry(chassisGeo);
+        const wireframeMat = new THREE.LineBasicMaterial({ color: CONFIG.colors.car, linewidth: 2 });
+        const chassisWire = new THREE.LineSegments(chassisEdges, wireframeMat);
+        chassis.add(chassisWire);
 
-        const cabinGeo = new THREE.BoxGeometry(1.0, 0.4, 1.2);
-        const cabinMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
-        const cabin = new THREE.Mesh(cabinGeo, cabinMat);
-        cabin.position.set(0, 0.9, -0.2);
-        playerCar.add(cabin);
+        // 2. Cockpit (Aerodynamic/Diagonal)
+        // Define the side profile shape (Trapezoid for futuristic look)
+        const cockpitShape = new THREE.Shape();
+        // Drawing in X-Y plane which we will rotate to be Z-Y
+        // Coordinates: x (length), y (height)
+        cockpitShape.moveTo(-0.6, 0);   // Rear Bottom
+        cockpitShape.lineTo(0.6, 0);    // Front Bottom
+        cockpitShape.lineTo(0.4, 0.45); // Front Top (Sloped windshield)
+        cockpitShape.lineTo(-0.4, 0.45);// Rear Top (Sloped rear window)
+        cockpitShape.lineTo(-0.6, 0);   // Close shape
 
-        const engineGeo = new THREE.BoxGeometry(0.8, 0.2, 0.1);
-        const engineMat = new THREE.MeshBasicMaterial({ color: 0xff0055 });
+        const extrudeSettings = {
+            steps: 1,
+            depth: 0.8, // Car Width
+            bevelEnabled: false
+        };
+
+        const cockpitGeo = new THREE.ExtrudeGeometry(cockpitShape, extrudeSettings);
+        cockpitGeo.center(); // Center the geometry geometry
+        
+        const cockpitMat = new THREE.MeshBasicMaterial({ color: 0x000000 }); 
+        const cockpit = new THREE.Mesh(cockpitGeo, cockpitMat);
+        
+        // Rotate so the profile is along the length of the car (Z axis)
+        cockpit.rotation.y = -Math.PI / 2; 
+        cockpit.position.set(0, 0.75, 0); 
+        playerCar.add(cockpit);
+
+        // Cockpit Wireframe (Following the new angled shape)
+        const cockpitEdges = new THREE.EdgesGeometry(cockpitGeo);
+        const cockpitWire = new THREE.LineSegments(cockpitEdges, new THREE.LineBasicMaterial({ color: 0xff00ff }));
+        cockpit.add(cockpitWire);
+
+        // 3. Neon Wheels (Hover pads)
+        const wheelGeo = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 16);
+        wheelGeo.rotateZ(Math.PI / 2);
+        // MeshBasicMaterial glows in dark
+        const wheelMat = new THREE.MeshBasicMaterial({ color: CONFIG.colors.car });
+        
+        const positions = [
+            [-0.8, 0.3, 1.0], [0.8, 0.3, 1.0], // Front
+            [-0.8, 0.3, -1.0], [0.8, 0.3, -1.0] // Rear
+        ];
+
+        positions.forEach(pos => {
+            const wheel = new THREE.Mesh(wheelGeo, wheelMat);
+            wheel.position.set(...pos);
+            playerCar.add(wheel);
+        });
+
+        // 4. Rear Engine Glow
+        const engineGeo = new THREE.BoxGeometry(1.0, 0.2, 0.1);
+        const engineMat = new THREE.MeshBasicMaterial({ color: 0xff0055 }); // Bright Pink/Red
         const engine = new THREE.Mesh(engineGeo, engineMat);
-        engine.position.set(0, 0.6, 1.26);
+        engine.position.set(0, 0.5, 1.51);
         playerCar.add(engine);
+
+        // 5. Underglow Light (Stronger)
+        const light = new THREE.PointLight(CONFIG.colors.car, 2, 8);
+        light.position.set(0, 0.5, 0);
+        playerCar.add(light);
 
         scene.add(playerCar);
     }
 
     function createEnvironment() {
         const geometry = new THREE.BufferGeometry();
-        const count = 1000;
+        const count = 500;
         const positions = new Float32Array(count * 3);
         for(let i = 0; i < count; i++) {
             positions[i*3] = (Math.random() - 0.5) * 100; 
@@ -624,7 +704,7 @@
             positions[i*3+2] = -Math.random() * 100 - 10; 
         }
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const material = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 });
+        const material = new THREE.PointsMaterial({ color: 0x555555, size: 0.2 });
         environmentParticles = new THREE.Points(geometry, material);
         scene.add(environmentParticles);
     }
@@ -669,8 +749,25 @@
         speed += CONFIG.speedIncrement;
         if(speed > CONFIG.speedMax) speed = CONFIG.speedMax;
 
+        // Road Animation
         roadGrid.position.z += speed;
         if (roadGrid.position.z > -80) roadGrid.position.z = -100;
+
+        // --- RAIN ANIMATION ---
+        if(rainSystem) {
+            const positions = rainSystem.geometry.attributes.position.array;
+            for(let i=0; i<positions.length; i+=3) {
+                positions[i+1] -= 0.5 + Math.random() * 0.2;
+                positions[i+2] += speed * 2; 
+
+                if (positions[i+1] < 0 || positions[i+2] > 10) {
+                    positions[i] = (Math.random() - 0.5) * 100; 
+                    positions[i+1] = 40 + Math.random() * 20; 
+                    positions[i+2] = -50 - Math.random() * 50; 
+                }
+            }
+            rainSystem.geometry.attributes.position.needsUpdate = true;
+        }
 
         // Music Visualizer
         if (isAudioPlaying && audioAnalyser) {
