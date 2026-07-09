@@ -87,23 +87,40 @@
     background:radial-gradient(ellipse at center, transparent 42%, rgba(0,180,255,.28) 100%);}
 
   /* ---------- Touch controls ---------- */
-  #controls{position:fixed; left:0; right:0; bottom:0; height:150px; z-index:15;
-    display:flex; justify-content:space-between; align-items:flex-end;
-    padding:0 14px 18px; pointer-events:none;}
-  .steer-group{display:flex; gap:14px; pointer-events:auto;}
-  .ctl{width:86px; height:86px; border-radius:50%;
+  #controls{position:fixed; inset:0; z-index:15; pointer-events:none;}
+  .ctl{position:fixed; bottom:calc(16px + env(safe-area-inset-bottom));
+    width:86px; height:86px; border-radius:50%;
     border:2px solid var(--cyan); background:rgba(0,243,255,.08);
     display:flex; align-items:center; justify-content:center;
     font-size:2rem; color:#fff; backdrop-filter:blur(4px);
-    box-shadow:inset 0 0 14px rgba(0,243,255,.15);}
+    box-shadow:inset 0 0 14px rgba(0,243,255,.15); pointer-events:auto;}
+  #btn-left{left:14px;}
+  #btn-right{right:14px;}
   .ctl.pressed{background:var(--cyan); color:#000; box-shadow:0 0 22px var(--cyan);}
-  #btn-nitro{pointer-events:auto; width:96px; height:96px; border-radius:50%;
+  #btn-nitro{position:fixed; right:14px; bottom:calc(116px + env(safe-area-inset-bottom));
+    pointer-events:auto; width:86px; height:86px; border-radius:50%;
     border:2px solid var(--amber); background:rgba(255,179,0,.1);
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    font-size:.8rem; font-weight:900; letter-spacing:2px; color:#ffd76a;
+    font-size:.72rem; font-weight:900; letter-spacing:2px; color:#ffd76a;
     backdrop-filter:blur(4px); box-shadow:inset 0 0 16px rgba(255,179,0,.2);}
-  #btn-nitro span{font-size:1.7rem; line-height:1;}
+  #btn-nitro span{font-size:1.6rem; line-height:1;}
   #btn-nitro.pressed{background:var(--amber); color:#000; box-shadow:0 0 26px var(--amber);}
+
+  /* steering wheel (joystick) mode */
+  #joystick{position:fixed; left:16px; bottom:calc(16px + env(safe-area-inset-bottom));
+    width:140px; height:140px; border-radius:50%; pointer-events:auto;
+    border:2px solid var(--cyan); background:rgba(0,243,255,.06);
+    backdrop-filter:blur(4px); box-shadow:inset 0 0 18px rgba(0,243,255,.12);
+    display:none; align-items:center; justify-content:center; touch-action:none;}
+  #joystick .hint{position:absolute; top:50%; transform:translateY(-50%);
+    font-size:1rem; color:rgba(255,255,255,.4); pointer-events:none;}
+  #joystick .hint.l{left:11px;} #joystick .hint.r{right:11px;}
+  #joy-knob{width:60px; height:60px; border-radius:50%; pointer-events:none;
+    background:rgba(0,243,255,.32); border:2px solid var(--cyan);
+    box-shadow:0 0 16px rgba(0,243,255,.55);}
+  body.mode-wheel #joystick{display:flex;}
+  body.mode-wheel #btn-left, body.mode-wheel #btn-right{display:none;}
+  body.mode-wheel #btn-nitro{bottom:calc(16px + env(safe-area-inset-bottom));}
 
   /* ---------- Menus ---------- */
   .menu{position:fixed; inset:0; z-index:30; display:flex; flex-direction:column;
@@ -125,10 +142,10 @@
     padding:11px; font-family:'Orbitron',sans-serif; font-size:.9rem; border-radius:6px; outline:none;}
   #status-audio{font-size:.65rem; color:#9aa; margin-top:6px; display:block;}
   .diff-row{display:flex; gap:8px;}
-  .diff{flex:1; padding:11px 4px; border-radius:6px; border:1px solid var(--purple);
+  .diff, .cmode{flex:1; padding:11px 4px; border-radius:6px; border:1px solid var(--purple);
     background:rgba(0,0,0,.4); color:#cbe; font-family:'Orbitron',sans-serif;
     font-size:.72rem; letter-spacing:1px; font-weight:700;}
-  .diff.sel{background:var(--purple); color:#fff; box-shadow:0 0 16px var(--purple);}
+  .diff.sel, .cmode.sel{background:var(--purple); color:#fff; box-shadow:0 0 16px var(--purple);}
   .go{background:var(--pink); color:#fff; border:none; padding:16px 56px;
     font-size:1.3rem; font-family:'Orbitron',sans-serif; font-weight:900; border-radius:50px;
     box-shadow:0 0 24px var(--pink); text-transform:uppercase; letter-spacing:3px;
@@ -173,10 +190,9 @@
 
 <!-- Touch controls -->
 <div id="controls">
-  <div class="steer-group">
-    <div class="ctl" id="btn-left">&#9664;</div>
-    <div class="ctl" id="btn-right">&#9654;</div>
-  </div>
+  <div class="ctl" id="btn-left">&#9664;</div>
+  <div class="ctl" id="btn-right">&#9654;</div>
+  <div id="joystick"><span class="hint l">&#9664;</span><div id="joy-knob"></div><span class="hint r">&#9654;</span></div>
   <div id="btn-nitro"><span>&#9889;</span>NITRO</div>
 </div>
 
@@ -201,6 +217,13 @@
         <button class="diff" data-d="0">ROOKIE</button>
         <button class="diff sel" data-d="1">RACER</button>
         <button class="diff" data-d="2">LEGEND</button>
+      </div>
+    </div>
+    <div class="box">
+      <label>&#127918; Controls</label>
+      <div class="diff-row">
+        <button class="cmode sel" data-c="arrows">ARROWS</button>
+        <button class="cmode" data-c="wheel">WHEEL</button>
       </div>
     </div>
   </div>
@@ -1047,6 +1070,37 @@ bindHold($('btn-left'),()=>tLeft=true,()=>tLeft=false);
 bindHold($('btn-right'),()=>tRight=true,()=>tRight=false);
 bindHold($('btn-nitro'),()=>tNitro=true,()=>tNitro=false);
 
+/* steering wheel (drag joystick) */
+let ctrlMode='arrows', joyVal=0, joyId=null;
+const joyEl=$('joystick'), joyKnob=$('joy-knob');
+function joyMove(e){
+  const r=joyEl.getBoundingClientRect();
+  const max=r.width/2-32;
+  const dx=THREE.MathUtils.clamp(e.clientX-(r.left+r.width/2),-max,max);
+  joyVal=dx/max;
+  joyKnob.style.transform='translateX('+dx+'px)';
+}
+joyEl.addEventListener('pointerdown',e=>{
+  e.preventDefault(); joyId=e.pointerId;
+  joyEl.setPointerCapture(e.pointerId); joyMove(e);
+});
+joyEl.addEventListener('pointermove',e=>{ if(e.pointerId===joyId) joyMove(e); });
+function joyEnd(e){
+  if(e.pointerId!==joyId) return;
+  joyId=null; joyVal=0; joyKnob.style.transform='translateX(0)';
+}
+joyEl.addEventListener('pointerup',joyEnd);
+joyEl.addEventListener('pointercancel',joyEnd);
+joyEl.addEventListener('lostpointercapture',joyEnd);
+document.querySelectorAll('.cmode').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.cmode').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');
+    ctrlMode=b.dataset.c;
+    document.body.classList.toggle('mode-wheel',ctrlMode==='wheel');
+  });
+});
+
 $('pause-btn').addEventListener('pointerdown',e=>{
   e.preventDefault();
   if(state!==S.RUN) return;
@@ -1133,8 +1187,9 @@ function frame(){
     let input=0;
     if(state===S.MENU) input=autopilotSteer();
     else{
-      if(keys['ArrowLeft']||keys['KeyA']||tLeft) input-=1;
-      if(keys['ArrowRight']||keys['KeyD']||tRight) input+=1;
+      if(keys['ArrowLeft']||keys['KeyA']||(ctrlMode==='arrows'&&tLeft)) input-=1;
+      if(keys['ArrowRight']||keys['KeyD']||(ctrlMode==='arrows'&&tRight)) input+=1;
+      if(ctrlMode==='wheel') input=THREE.MathUtils.clamp(input+joyVal,-1,1);
     }
     steer+=(input-steer)*Math.min(1,dt*10);
 
