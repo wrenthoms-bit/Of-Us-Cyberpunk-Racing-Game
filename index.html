@@ -7,7 +7,7 @@
 <!--
   OF US : NEON CIRCUIT  —  Cyberpunk street racer
   Music by Delrogue. Single-file Three.js game for GitHub Pages.
-  Drop this file in the repo root next to the "Of Us" mp3 files.
+  Drop this file in the repo root next to "Of Us (Remastered).mp3".
   Name it index.html so the Pages link opens the game directly.
 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -45,10 +45,13 @@
   .cell.on{background:var(--cyan); box-shadow:0 0 12px var(--cyan);}
   .cell.hurt{background:var(--danger); border-color:var(--danger); box-shadow:0 0 14px var(--danger);}
 
-  #pause-btn{position:fixed; top:64px; right:16px; z-index:12; pointer-events:auto;
+  .hud-btn{position:fixed; top:64px; z-index:12; pointer-events:auto;
     width:42px; height:42px; border-radius:10px; border:1px solid rgba(255,255,255,.35);
     background:rgba(255,255,255,.08); color:#fff; font-size:1.1rem; display:flex;
     align-items:center; justify-content:center; backdrop-filter:blur(4px);}
+  #pause-btn{left:16px;}
+  #mute-btn{left:66px; font-size:1.3rem;}
+  #mute-btn.off{opacity:.45; text-decoration:line-through;}
 
   /* ---------- Warning banner ---------- */
   #warn{position:fixed; top:16%; left:50%; transform:translateX(-50%);
@@ -121,6 +124,11 @@
   body.mode-wheel #joystick{display:flex;}
   body.mode-wheel #btn-left, body.mode-wheel #btn-right{display:none;}
   body.mode-wheel #btn-nitro{bottom:calc(16px + env(safe-area-inset-bottom));}
+  /* mouse + keyboard machines: no on-screen driving controls */
+  @media (hover:hover) and (pointer:fine){
+    #controls, .touch-only{display:none;}
+    #nitro-wrap{bottom:40px;}
+  }
 
   /* ---------- Menus ---------- */
   .menu{position:fixed; inset:0; z-index:30; display:flex; flex-direction:column;
@@ -138,9 +146,6 @@
     background:rgba(255,255,255,.04); text-align:left;}
   .box label{display:block; font-size:.68rem; letter-spacing:2px; color:var(--cyan);
     text-transform:uppercase; margin-bottom:8px;}
-  select{width:100%; background:rgba(0,0,0,.55); border:1px solid var(--purple); color:#fff;
-    padding:11px; font-family:'Orbitron',sans-serif; font-size:.9rem; border-radius:6px; outline:none;}
-  #status-audio{font-size:.65rem; color:#9aa; margin-top:6px; display:block;}
   .diff-row{display:flex; gap:8px;}
   .diff, .cmode, .vmode{flex:1; padding:11px 4px; border-radius:6px; border:1px solid var(--purple);
     background:rgba(0,0,0,.4); color:#cbe; font-family:'Orbitron',sans-serif;
@@ -151,6 +156,10 @@
     box-shadow:0 0 24px var(--pink); text-transform:uppercase; letter-spacing:3px;
     transition:transform .1s;}
   .go:active{transform:scale(.94);}
+  .go.ghost{background:transparent; color:var(--cyan); border:1px solid var(--cyan);
+    box-shadow:none; font-size:.85rem; padding:12px 38px; margin-top:16px;}
+  #best-line{display:block; font-size:.65rem; letter-spacing:1px; color:#9aa; margin-top:9px;}
+  #best-line b{color:var(--amber);}
   .howto{margin-top:20px; font-size:.68rem; color:#9ab; line-height:1.9; letter-spacing:1px;}
   .howto b{color:var(--cyan);}
   .stats{font-size:.85rem; color:#bce; line-height:2; letter-spacing:1px; margin-bottom:8px;}
@@ -180,7 +189,8 @@
   </div>
 </div>
 <div id="shield-row"></div>
-<div id="pause-btn">II</div>
+<div id="pause-btn" class="hud-btn">II</div>
+<div id="mute-btn" class="hud-btn">&#9834;</div>
 <div id="warn"></div>
 <div id="popups"></div>
 <div id="nitro-wrap">
@@ -202,21 +212,15 @@
   <h2>NEON CIRCUIT</h2>
   <div class="panel">
     <div class="box">
-      <label>&#127925; Soundtrack</label>
-      <select id="track-select">
-        <option value="Of%20Us%20(Remastered).mp3">Of Us (Remastered)</option>
-      </select>
-      <span id="status-audio">Select a track</span>
-    </div>
-    <div class="box">
       <label>&#127937; Difficulty</label>
       <div class="diff-row">
         <button class="diff" data-d="0">ROOKIE</button>
         <button class="diff sel" data-d="1">RACER</button>
         <button class="diff" data-d="2">LEGEND</button>
       </div>
+      <span id="best-line"></span>
     </div>
-    <div class="box">
+    <div class="box touch-only">
       <label>&#127918; Controls</label>
       <div class="diff-row">
         <button class="cmode sel" data-c="arrows">ARROWS</button>
@@ -234,8 +238,17 @@
   <button class="go" id="btn-start">START RACE</button>
   <div class="howto">
     <b>&#9664; &#9654;</b> steer around real corners &nbsp;·&nbsp; <b>&#9889;</b> hold for nitro<br>
-    Watch for <b>laser lock</b> rings and <b>spike</b> warnings — dodge or jump the ramps!
+    Watch for <b>laser lock</b> rings and <b>spike</b> warnings — dodge or jump the ramps!<br>
+    Keyboard: <b>&larr; &rarr;</b> / <b>A D</b> steer &nbsp;·&nbsp; <b>SPACE</b> nitro &nbsp;·&nbsp; <b>P</b> pause &nbsp;·&nbsp; <b>M</b> mute &nbsp;·&nbsp; <b>ENTER</b> start
   </div>
+</div>
+
+<!-- Pause -->
+<div id="pause-screen" class="menu hidden">
+  <h1>PAUSED</h1>
+  <h2>ENGINE IDLING</h2>
+  <button class="go" id="btn-resume">RESUME</button>
+  <button class="go ghost" id="btn-pause-menu">MENU</button>
 </div>
 
 <!-- Game over -->
@@ -245,6 +258,7 @@
   <div id="final-score">0</div>
   <div class="stats" id="go-stats"></div>
   <button class="go" id="btn-restart">RESTART</button>
+  <button class="go ghost" id="btn-menu">MENU</button>
 </div>
 
 <script>
@@ -256,10 +270,12 @@ const STEP = 6;            // metres between path points
 const HALF = 7;            // half road width
 const N_SEG = 84;          // pooled road segments
 const DIFFS = [
-  {name:'ROOKIE', maxSpeed:25, gapMul:1.3,  laserMul:1.35, shields:4},
-  {name:'RACER',  maxSpeed:31, gapMul:1.0,  laserMul:1.0,  shields:3},
-  {name:'LEGEND', maxSpeed:37, gapMul:0.78, laserMul:0.72, shields:3},
+  // shields = hits you can take; the run ends when the last cell goes out
+  {name:'ROOKIE', maxSpeed:25, gapMul:1.3,  laserMul:1.35, shields:5},
+  {name:'RACER',  maxSpeed:31, gapMul:1.0,  laserMul:1.0,  shields:4},
+  {name:'LEGEND', maxSpeed:37, gapMul:0.78, laserMul:0.72, shields:4},
 ];
+const SCENERY_AHEAD = 70;  // path points of scenery kept ahead of the car (just past the fog)
 let diff = DIFFS[1];
 
 /* ============================== STATE =============================== */
@@ -271,8 +287,8 @@ let timeScale = 1;
 let carX=0, carZ=0, carY=0, carH=0, vy=0;
 let speed = 12, carIdx = 0, carLong = 0, carLat = 0;
 let steer = 0, airborne=false, airTime=0, onRamp=false, prevOnRamp=false, rampProg=0;
-let shields = 3, invuln = 0, nitro = 40, nitroOn = false;
-let score = 0, combo = 0, comboT = 0, runStart = 0, topSpeed = 0, bestDist = 0;
+let shields = 4, invuln = 0, nitro = 40, nitroOn = false;
+let score = 0, combo = 0, comboT = 0, runStart = 0, topSpeed = 0;
 let laserT = 13, nextMilestone = 500;
 let shake = 0, pulse = 0, elapsed = 0;
 
@@ -283,20 +299,43 @@ const warnEl=$('warn'), popups=$('popups'), nitroFill=$('nitro-fill'), nitroFx=$
 const shieldRow=$('shield-row');
 
 /* ============================== AUDIO =============================== */
-let ac=null, master=null, analyser=null, freqData=null, mediaSrc=null, musicOK=false;
+let ac=null, master=null, analyser=null, freqData=null, mediaSrc=null, musicGain=null;
+// opened straight from disk the browser won't let Web Audio read the mp3, so it plays un-analysed
+const LOCAL_FILE = location.protocol==='file:';
+const MUTE_KEY = 'ofus-neon-circuit-muted';
+let muted = false;
+try{ muted = localStorage.getItem(MUTE_KEY)==='1'; }catch(e){}
 const music = new Audio();
-music.loop = true; music.crossOrigin = 'anonymous'; music.volume = 0.85;
+music.loop = true; music.volume = 0.85; music.muted = muted;
+if(!LOCAL_FILE) music.crossOrigin = 'anonymous';
+music.preload = 'auto';
+music.src = 'Of%20Us%20(Remastered).mp3';
 
 function audioInit(){
   if(ac) return;
   try{
     ac = new (window.AudioContext||window.webkitAudioContext)();
-    master = ac.createGain(); master.gain.value = 0.5; master.connect(ac.destination);
+    master = ac.createGain(); master.gain.value = muted?0:0.5; master.connect(ac.destination);
+  }catch(e){ ac = null; return; }
+  if(LOCAL_FILE) return;
+  try{
+    mediaSrc = ac.createMediaElementSource(music);
     analyser = ac.createAnalyser(); analyser.fftSize = 64;
     freqData = new Uint8Array(analyser.frequencyBinCount);
-    mediaSrc = ac.createMediaElementSource(music);
-    mediaSrc.connect(analyser); analyser.connect(ac.destination);
-  }catch(e){ ac = null; }
+    musicGain = ac.createGain();
+    mediaSrc.connect(analyser); analyser.connect(musicGain); musicGain.connect(ac.destination);
+  }catch(e){ analyser = null; musicGain = null; }
+}
+/* quieten the music on a crash (iOS ignores music.volume, so prefer the gain node) */
+function duckMusic(on){
+  if(musicGain) musicGain.gain.value = on?0.35:1;
+  else music.volume = on?0.3:0.85;
+}
+function setMuted(v){
+  muted = v; music.muted = v;
+  if(master) master.gain.value = v?0:0.5;
+  $('mute-btn').classList.toggle('off',v);
+  try{ localStorage.setItem(MUTE_KEY, v?'1':'0'); }catch(e){}
 }
 function beep(f0,f1,dur,type,vol){
   if(!ac) return;
@@ -334,15 +373,6 @@ const sfx = {
   near(){ beep(1300,1700,0.08,'triangle',0.08); },
   jump(){ beep(340,700,0.25,'sine',0.1); },
 };
-
-function loadTrack(file){
-  musicOK = false;
-  $('status-audio').textContent = 'Loading track…';
-  music.src = file;
-  music.onerror = ()=>{ $('status-audio').textContent = 'Track not found — racing without music'; };
-  music.oncanplaythrough = ()=>{ musicOK=true; $('status-audio').textContent = 'Ready: '+decodeURIComponent(file); };
-  music.load();
-}
 
 /* ======================= THREE / SCENE SETUP ======================== */
 const scene = new THREE.Scene();
@@ -426,7 +456,7 @@ const rainPos=new Float32Array(RAIN_N*3);
 for(let i=0;i<RAIN_N;i++){ rainPos[i*3]=(Math.random()-0.5)*140; rainPos[i*3+1]=Math.random()*45; rainPos[i*3+2]=(Math.random()-0.5)*140; }
 rainGeo.setAttribute('position',new THREE.BufferAttribute(rainPos,3));
 const rain=new THREE.Points(rainGeo,new THREE.PointsMaterial({color:0x8fb6ff,size:0.14,transparent:true,opacity:0.5,depthWrite:false}));
-scene.add(rain);
+rain.frustumCulled=false; scene.add(rain);
 
 /* ============================== PATH ================================ */
 const path=[];
@@ -442,7 +472,6 @@ function extendPath(target){
     genH+=sectCurv; sectLeft--;
     genX+=Math.sin(genH)*STEP; genZ-=Math.cos(genH)*STEP;
     path.push({x:genX,z:genZ,h:genH});
-    onNewPoint(path.length-1);
   }
 }
 const _v=new THREE.Vector3();
@@ -530,16 +559,30 @@ function spawnBuilding(idx,side){
   m.userData.idx=idx; m.visible=true;
 }
 
+/* canvas text is drawn once now and again when Orbitron has loaded */
+const fontRedraws=[];
+function fontTexture(cv,draw){
+  const tex=new THREE.CanvasTexture(cv);
+  draw();
+  fontRedraws.push(()=>{ draw(); tex.needsUpdate=true; });
+  return tex;
+}
+addEventListener('load',()=>{
+  if(!document.fonts||!document.fonts.load) return;
+  document.fonts.load('900 72px Orbitron').then(()=>fontRedraws.forEach(f=>f())).catch(()=>{});
+});
 function textTexture(text,color){
   const cv=document.createElement('canvas'); cv.width=512; cv.height=192;
   const g=cv.getContext('2d');
-  g.fillStyle='#0a0616'; g.fillRect(0,0,512,192);
-  g.strokeStyle=color; g.lineWidth=10; g.strokeRect(8,8,496,176);
-  g.font='900 72px Orbitron, sans-serif';
-  g.textAlign='center'; g.textBaseline='middle';
-  g.shadowColor=color; g.shadowBlur=26;
-  g.fillStyle=color; g.fillText(text,256,100);
-  return new THREE.CanvasTexture(cv);
+  return fontTexture(cv,()=>{
+    g.shadowBlur=0;
+    g.fillStyle='#0a0616'; g.fillRect(0,0,512,192);
+    g.strokeStyle=color; g.lineWidth=10; g.strokeRect(8,8,496,176);
+    g.font='900 72px Orbitron, sans-serif';
+    g.textAlign='center'; g.textBaseline='middle';
+    g.shadowColor=color; g.shadowBlur=26;
+    g.fillStyle=color; g.fillText(text,256,100);
+  });
 }
 const BILL_TEXTS=[['DELROGUE','#ff4fc3'],['OF US','#27e6ff'],['NEON CIRCUIT','#ffd166'],
   ['SECTOR 07','#b96bff'],['TURBO','#27e6ff'],['HOLO·CAB','#ff4fc3'],['SYNTH CITY','#ffd166']];
@@ -584,6 +627,11 @@ function onNewPoint(i){
   }
   if(i%26===0 && i>20) spawnArch(i);
 }
+let sceneryIdx=0;
+function spawnScenery(upTo){
+  upTo=Math.min(upTo,path.length-1);
+  while(sceneryIdx<=upTo) onNewPoint(sceneryIdx++);
+}
 function recycleScenery(){
   for(const b of buildings) if(b.visible && b.userData.idx<carIdx-6) b.visible=false;
   for(const b of billboards) if(b.visible && b.userData.idx<carIdx-6) b.visible=false;
@@ -597,6 +645,7 @@ for(let i=0;i<N_SEG;i++){
   setSeg(m,i); scene.add(m); segs.push(m);
 }
 carX=path[3].x; carZ=path[3].z; carH=path[3].h; carIdx=3;
+spawnScenery(carIdx+SCENERY_AHEAD);
 
 /* ============================== CAR ================================= */
 let canopyMesh=null, wheelMesh=null;
@@ -717,6 +766,7 @@ const hazards=[];
 const barrGeo=new THREE.BoxGeometry(2.7,2.1,1.1);
 const barrMat=new THREE.MeshBasicMaterial({color:0xff2d95});
 const barrEdge=new THREE.EdgesGeometry(barrGeo);
+const barrEdgeMat=new THREE.LineBasicMaterial({color:0xffffff});
 
 const pickGeo=new THREE.OctahedronGeometry(0.8);
 const pickMats={
@@ -731,6 +781,8 @@ const rampGeo=new THREE.ExtrudeGeometry(rampShape,{steps:1,depth:4.6,bevelEnable
 rampGeo.rotateY(Math.PI/2); rampGeo.translate(-2.3,0,0); // length runs -z, width centred on x
 const rampMat=new THREE.MeshBasicMaterial({color:0x120a24});
 const rampEdge=new THREE.EdgesGeometry(rampGeo);
+const rampEdgeMat=new THREE.LineBasicMaterial({color:0x00f3ff});
+const rampChevGeo=new THREE.PlaneGeometry(3.4,1.1);
 
 function makeSpikesGeo(width){
   const n=9, sw=width/n, verts=[];
@@ -745,21 +797,36 @@ function makeSpikesGeo(width){
 }
 const spikesGeo=makeSpikesGeo(1);
 const spikesMat=new THREE.MeshBasicMaterial({color:0xff3355,side:THREE.DoubleSide});
-const signTex=(()=>{ 
+const signTex=(()=>{
   const cv=document.createElement('canvas'); cv.width=256; cv.height=128;
   const g=cv.getContext('2d');
-  g.fillStyle='#1a0505'; g.fillRect(0,0,256,128);
-  g.strokeStyle='#ffb300'; g.lineWidth=10; g.strokeRect(6,6,244,116);
-  g.font='900 44px Orbitron, sans-serif'; g.textAlign='center'; g.fillStyle='#ffb300';
-  g.shadowColor='#ffb300'; g.shadowBlur=18;
-  g.fillText('\u26A0 SPIKES',128,80);
-  return new THREE.CanvasTexture(cv);
+  return fontTexture(cv,()=>{
+    g.shadowBlur=0;
+    g.fillStyle='#1a0505'; g.fillRect(0,0,256,128);
+    g.strokeStyle='#ffb300'; g.lineWidth=10; g.strokeRect(6,6,244,116);
+    g.font='900 44px Orbitron, sans-serif'; g.textAlign='center'; g.fillStyle='#ffb300';
+    g.shadowColor='#ffb300'; g.shadowBlur=18;
+    g.fillText('\u26A0 SPIKES',128,80);
+  });
 })();
 const chevMat=new THREE.MeshBasicMaterial({color:0xffb300,transparent:true,opacity:0.9,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false});
+const SPIKE_HALFW=HALF*0.62;
+const spikeBaseGeo=new THREE.BoxGeometry(SPIKE_HALFW*2,0.16,0.9);
+const spikeBaseMat=new THREE.MeshBasicMaterial({color:0x2a1030});
+const spikeSignGeo=new THREE.PlaneGeometry(5,2.5);
+const spikeChevGeo=new THREE.PlaneGeometry(SPIKE_HALFW*1.8,1.4);
+
+const laserRingGeo=new THREE.RingGeometry(3.2,4.2,42);
+const laserDiscGeo=new THREE.CircleGeometry(3.2,32);
+const laserPillarGeo=new THREE.CylinderGeometry(3.4,3.4,120,20,1,true);
+const laserBeamGeo=new THREE.CylinderGeometry(1.15,1.5,150,16);
+const laserShockGeo=new THREE.RingGeometry(0.8,1.6,32);
 
 function addHazard(h){ hazards.push(h); }
+/* geometries are shared; h.mats lists the materials owned by this hazard alone */
 function removeHazardMeshes(h){
   (h.meshes||[]).forEach(m=>{ scene.remove(m); });
+  (h.mats||[]).forEach(m=>m.dispose());
 }
 
 function spawnBarricade(idx){
@@ -773,7 +840,7 @@ function spawnBarricade(idx){
     }
     usedLats.push(lat);
     const m=new THREE.Mesh(barrGeo,barrMat);
-    m.add(new THREE.LineSegments(barrEdge,new THREE.LineBasicMaterial({color:0xffffff})));
+    m.add(new THREE.LineSegments(barrEdge,barrEdgeMat));
     pathPos(idx,lat,1.05,m.position);
     m.rotation.y=-path[idx].h;
     scene.add(m);
@@ -802,8 +869,8 @@ function spawnPickups(idx){
 function spawnRamp(idx){
   const lat=(Math.random()*2-1)*3;
   const m=new THREE.Mesh(rampGeo,rampMat);
-  m.add(new THREE.LineSegments(rampEdge,new THREE.LineBasicMaterial({color:0x00f3ff})));
-  const ch=new THREE.Mesh(new THREE.PlaneGeometry(3.4,1.1),chevMat);
+  m.add(new THREE.LineSegments(rampEdge,rampEdgeMat));
+  const ch=new THREE.Mesh(rampChevGeo,chevMat);
   ch.position.set(0,1.3,-5); ch.rotation.x=-0.24; m.add(ch);
   pathPos(idx,lat,0,m.position);
   m.rotation.y=-path[idx].h;
@@ -812,12 +879,12 @@ function spawnRamp(idx){
 }
 function spawnSpikes(idx){
   const side=Math.random()<0.5?-1:1;
-  const halfW=HALF*0.62;
+  const halfW=SPIKE_HALFW;
   const lat=side*(HALF-halfW);   // strip hugs one side, gap on the other
   const grp=new THREE.Group();
   const spikes=new THREE.Mesh(spikesGeo,spikesMat);
   spikes.scale.set(halfW*2,1.15,1); spikes.scale.y=0.02;
-  const base=new THREE.Mesh(new THREE.BoxGeometry(halfW*2,0.16,0.9),new THREE.MeshBasicMaterial({color:0x2a1030}));
+  const base=new THREE.Mesh(spikeBaseGeo,spikeBaseMat);
   base.position.y=0.08;
   grp.add(spikes,base);
   pathPos(idx,lat,0,grp.position);
@@ -825,20 +892,20 @@ function spawnSpikes(idx){
   scene.add(grp);
   // floating warning sign + chevrons a bit before the strip
   const sIdx=Math.max(0,idx-5);
-  const sign=new THREE.Mesh(new THREE.PlaneGeometry(5,2.5),
-    new THREE.MeshBasicMaterial({map:signTex,transparent:true,side:THREE.DoubleSide}));
+  const signMat=new THREE.MeshBasicMaterial({map:signTex,transparent:true,side:THREE.DoubleSide});
+  const sign=new THREE.Mesh(spikeSignGeo,signMat);
   pathPos(sIdx,lat,3.2,sign.position);
   sign.rotation.y=-path[sIdx].h;
   sign.visible=false; scene.add(sign);
   const chevs=[];
   for(let n=0;n<2;n++){
-    const c=new THREE.Mesh(new THREE.PlaneGeometry(halfW*1.8,1.4),chevMat);
+    const c=new THREE.Mesh(spikeChevGeo,chevMat);
     pathPos(idx-3-n*2,lat,0.06,c.position);
     c.rotation.x=-Math.PI/2; c.rotation.z=-path[idx-3-n*2].h;
     c.visible=false; scene.add(c); chevs.push(c);
   }
   addHazard({type:'spike',idx,lat,halfW,long:idx*STEP,state:'idle',t:0,
-    meshes:[grp,sign,...chevs], grp, spikes, sign, chevs, jumped:false});
+    meshes:[grp,sign,...chevs], mats:[signMat], grp, spikes, sign, chevs, jumped:false});
 }
 
 /* orbital laser (independent event) */
@@ -851,30 +918,31 @@ function scheduleLaser(){
     const side=carLat>0?-1:1;
     makeLaser(idx+1, THREE.MathUtils.clamp(carLat+side*4.5,-HALF+1.6,HALF-1.6));
   }
-  showWarn('\u26A0 ORBITAL LASER LOCK \u2014 MOVE!');
+  showWarn('\u26A0 ORBITAL LASER LOCK \u2014 MOVE!','laser');
   sfx.warn(); sfx.laserCharge();
 }
 function makeLaser(idx,lat){
-  const ring=new THREE.Mesh(new THREE.RingGeometry(3.2,4.2,42),
+  const ring=new THREE.Mesh(laserRingGeo,
     new THREE.MeshBasicMaterial({color:0xff2233,transparent:true,opacity:0.85,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false}));
   ring.rotation.x=-Math.PI/2;
   pathPos(idx,lat,0.07,ring.position);
-  const disc=new THREE.Mesh(new THREE.CircleGeometry(3.2,32),
+  const disc=new THREE.Mesh(laserDiscGeo,
     new THREE.MeshBasicMaterial({color:0xff2233,transparent:true,opacity:0.1,blending:THREE.AdditiveBlending,depthWrite:false}));
   disc.rotation.x=-Math.PI/2;
   disc.position.copy(ring.position);
-  const pillar=new THREE.Mesh(new THREE.CylinderGeometry(3.4,3.4,120,20,1,true),
+  const pillar=new THREE.Mesh(laserPillarGeo,
     new THREE.MeshBasicMaterial({color:0xff3344,transparent:true,opacity:0.05,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false}));
   pillar.position.copy(ring.position); pillar.position.y=60;
-  const beam=new THREE.Mesh(new THREE.CylinderGeometry(1.15,1.5,150,16),
+  const beam=new THREE.Mesh(laserBeamGeo,
     new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));
   beam.position.copy(ring.position); beam.position.y=75;
-  const shock=new THREE.Mesh(new THREE.RingGeometry(0.8,1.6,32),
+  const shock=new THREE.Mesh(laserShockGeo,
     new THREE.MeshBasicMaterial({color:0xff7744,transparent:true,opacity:0,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false}));
   shock.rotation.x=-Math.PI/2; shock.position.copy(ring.position); shock.position.y=0.1;
   [ring,disc,pillar,beam,shock].forEach(m=>scene.add(m));
   addHazard({type:'laser',idx,lat,long:idx*STEP,state:'aim',t:0,
-    meshes:[ring,disc,pillar,beam,shock], ring,disc,pillar,beam,shock, hitDone:false});
+    meshes:[ring,disc,pillar,beam,shock], mats:[ring,disc,pillar,beam,shock].map(m=>m.material),
+    ring,disc,pillar,beam,shock, hitDone:false});
 }
 
 /* spawner */
@@ -946,7 +1014,7 @@ function updateHazards(dt){
               h.jumped=true; reward(90,'SPIKES JUMPED!'); sfx.jump();
             }
           } else if(Math.abs(h.lat-carLat)<h.halfW+0.7){
-            damage(); speed*=0.5;
+            damage();
             burst(carX,0.4,carZ,0xffb300,20,8);
             h.state='done';
           }
@@ -974,7 +1042,7 @@ function updateHazards(dt){
           burst(h.ring.position.x,0.5,h.ring.position.z,0xffffff,14,22);
           const d=Math.hypot(h.ring.position.x-carX,h.ring.position.z-carZ);
           shake=Math.max(shake,THREE.MathUtils.clamp(1.6-d*0.05,0.15,1.4));
-          if(d<4.4){ damage(); speed*=0.55; }
+          if(d<4.4){ damage(); }
           else if(d<10){ reward(120,'LASER DODGED!'); }
         }
         if(h.t>0.5){
@@ -1019,7 +1087,7 @@ function damage(){
   shields--;
   updateShields(true);
   combo=0;
-  if(shields<0){ crash(); return; }
+  if(shields<=0){ crash(); return; }
   invuln=2.2; shake=Math.max(shake,0.9);
   speed*=0.55;
   sfx.hit();
@@ -1035,7 +1103,7 @@ function crash(){
   burst(carX,1,carZ,0xffffff,20,24);
   carBody.visible=false;
   hideWarn();
-  music.volume=0.3;
+  duckMusic(true);
   setTimeout(()=>{
     timeScale=1;
     showGameOver();
@@ -1043,16 +1111,31 @@ function crash(){
 }
 const QUIPS=['SO CLOSE \u2014 GO AGAIN!','THE CITY REMEMBERS YOUR RUN','LEGENDS RESPAWN',
   'THAT LASER GOT LUCKY','NICE DRIVING \u2014 ONE MORE LAP?','ALMOST BEAT THE GRID!'];
+/* best score + distance per difficulty, kept across visits */
+const BEST_KEY='ofus-neon-circuit-best';
+let best={};
+try{ best=JSON.parse(localStorage.getItem(BEST_KEY))||{}; }catch(e){ best={}; }
+function showBestLine(){
+  const b=best[diff.name];
+  $('best-line').innerHTML=b
+    ? 'BEST <b>'+b.score.toLocaleString()+'</b> &nbsp;·&nbsp; <b>'+b.dist.toLocaleString()+' m</b>'
+    : 'NO '+diff.name+' RUNS YET';
+}
 function showGameOver(){
+  if(state!==S.CRASH) return;
   state=S.OVER;
-  const dist=Math.round(carLong-runStart);
-  bestDist=Math.max(bestDist,dist);
-  $('final-score').textContent=Math.round(score).toLocaleString();
-  $('go-quip').textContent=QUIPS[(Math.random()*QUIPS.length)|0];
+  const dist=Math.round(carLong-runStart), pts=Math.round(score);
+  const b=best[diff.name]||{score:0,dist:0};
+  const newBest=pts>b.score;
+  b.score=Math.max(b.score,pts); b.dist=Math.max(b.dist,dist);
+  best[diff.name]=b;
+  try{ localStorage.setItem(BEST_KEY,JSON.stringify(best)); }catch(e){}
+  $('final-score').textContent=pts.toLocaleString();
+  $('go-quip').textContent=newBest?'NEW BEST SCORE!':QUIPS[(Math.random()*QUIPS.length)|0];
   $('go-stats').innerHTML=
     'DISTANCE <b>'+dist.toLocaleString()+' m</b><br>'+
     'TOP SPEED <b>'+Math.round(topSpeed*3.6)+' km/h</b><br>'+
-    'SESSION BEST <b>'+bestDist.toLocaleString()+' m</b>';
+    diff.name+' BEST <b>'+b.score.toLocaleString()+'</b> &nbsp;·&nbsp; <b>'+b.dist.toLocaleString()+' m</b>';
   $('over-screen').classList.remove('hidden');
   music.pause();
 }
@@ -1074,14 +1157,16 @@ function updateShields(hurt){
     shieldRow.appendChild(d);
   }
 }
-let warnCount=0;
-function showWarn(txt){
+let warnTimer=0, warnKind='';
+function showWarn(txt,kind){
   warnEl.textContent=txt; warnEl.classList.add('show');
-  warnCount++;
-  setTimeout(()=>{ if(--warnCount<=0){ warnCount=0; warnEl.classList.remove('show'); } },2100);
+  warnKind=kind||'';
+  clearTimeout(warnTimer);
+  warnTimer=setTimeout(hideWarn,2100);
 }
-function hideWarn(){ warnCount=0; warnEl.classList.remove('show'); }
-function hideWarnSoon(){ setTimeout(hideWarn,150); }
+function hideWarn(){ clearTimeout(warnTimer); warnEl.classList.remove('show'); }
+/* laser has fired: drop its banner, but leave any newer warning up */
+function hideWarnSoon(){ setTimeout(()=>{ if(warnKind==='laser') hideWarn(); },150); }
 function popup(txt,color){
   const d=document.createElement('div');
   d.className='pop'; d.textContent=txt;
@@ -1096,6 +1181,7 @@ function popup(txt,color){
 const keys={};
 addEventListener('keydown',e=>{ keys[e.code]=true; if(e.code==='Space') e.preventDefault(); });
 addEventListener('keyup',e=>{ keys[e.code]=false; });
+addEventListener('blur',()=>{ for(const k in keys) keys[k]=false; });
 function bindHold(el,on,off){
   const set=v=>{ v?el.classList.add('pressed'):el.classList.remove('pressed'); v?on():off(); };
   el.addEventListener('pointerdown',e=>{ e.preventDefault(); el.setPointerCapture(e.pointerId); set(true); });
@@ -1139,18 +1225,18 @@ document.querySelectorAll('.cmode').forEach(b=>{
   });
 });
 
-$('pause-btn').addEventListener('pointerdown',e=>{
-  e.preventDefault();
-  if(state!==S.RUN) return;
-  paused=!paused;
+function setPaused(v){
+  if(state!==S.RUN || paused===v) return;
+  paused=v;
   $('pause-btn').textContent=paused?'\u25B6':'II';
-  paused?music.pause():(musicOK&&music.play().catch(()=>{}));
-});
-document.addEventListener('visibilitychange',()=>{
-  if(document.hidden && state===S.RUN && !paused){
-    paused=true; $('pause-btn').textContent='\u25B6'; music.pause();
-  }
-});
+  $('pause-screen').classList.toggle('hidden',!paused);
+  paused?music.pause():music.play().catch(()=>{});
+}
+$('pause-btn').addEventListener('pointerdown',e=>{ e.preventDefault(); setPaused(!paused); });
+$('btn-resume').addEventListener('click',()=>setPaused(false));
+$('mute-btn').addEventListener('pointerdown',e=>{ e.preventDefault(); setMuted(!muted); });
+$('mute-btn').classList.toggle('off',muted);
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) setPaused(true); });
 
 /* ============================== MENU ================================ */
 document.querySelectorAll('.diff').forEach(b=>{
@@ -1158,8 +1244,11 @@ document.querySelectorAll('.diff').forEach(b=>{
     document.querySelectorAll('.diff').forEach(x=>x.classList.remove('sel'));
     b.classList.add('sel');
     diff=DIFFS[+b.dataset.d];
+    shields=diff.shields; updateShields();
+    showBestLine();
   });
 });
+showBestLine();
 let camMode='chase';
 document.querySelectorAll('.vmode').forEach(b=>{
   b.addEventListener('click',()=>{
@@ -1168,32 +1257,64 @@ document.querySelectorAll('.vmode').forEach(b=>{
     camMode=b.dataset.v;
   });
 });
-$('track-select').addEventListener('change',e=>loadTrack(e.target.value));
-loadTrack($('track-select').value);
 
+function clearHazards(){
+  for(const h of hazards) removeHazardMeshes(h);
+  hazards.length=0;
+  hideWarn();
+}
 function startRun(){
+  if(state===S.CRASH) return;
   audioInit();
   if(ac && ac.state==='suspended') ac.resume();
+  if(document.activeElement && document.activeElement.blur) document.activeElement.blur(); // so Space/Enter can't re-press a menu button mid-race
   $('start-screen').classList.add('hidden');
   $('over-screen').classList.add('hidden');
+  $('pause-screen').classList.add('hidden');
   carBody.visible=true;
   shields=diff.shields; updateShields();
   score=0; combo=0; nitro=40; invuln=0;
   speed=Math.max(speed,10);
   runStart=carLong; topSpeed=0; nextMilestone=500;
   laserT=12; nextLong=carLong+240;
-  // clear existing hazards
-  for(const h of hazards) removeHazardMeshes(h);
-  hazards.length=0;
-  hideWarn();
+  clearHazards();
   state=S.RUN; paused=false; $('pause-btn').textContent='II';
-  music.volume=0.85;
+  duckMusic(false);
   try{ music.currentTime=0; }catch(e){}
-  if(musicOK) music.play().catch(()=>{});
+  // play from the tap itself: it starts as soon as enough has buffered (iOS won't preload)
+  music.play().catch(()=>{});
   sfx.nitroGo();
+}
+/* back to the start menu (from pause or game over) to change difficulty / controls / camera */
+function goMenu(){
+  if(state===S.CRASH || state===S.MENU) return;
+  clearHazards();
+  state=S.MENU; paused=false; $('pause-btn').textContent='II';
+  carBody.visible=true; nitroOn=false; nitroFx.style.opacity=0;
+  shields=diff.shields; updateShields();
+  music.pause();
+  showBestLine();
+  $('over-screen').classList.add('hidden');
+  $('pause-screen').classList.add('hidden');
+  $('start-screen').classList.remove('hidden');
 }
 $('btn-start').addEventListener('click',startRun);
 $('btn-restart').addEventListener('click',startRun);
+$('btn-menu').addEventListener('click',goMenu);
+$('btn-pause-menu').addEventListener('click',goMenu);
+addEventListener('keydown',e=>{
+  if(e.repeat) return;
+  if(e.code==='Enter'){
+    e.preventDefault();
+    if(paused) setPaused(false);
+    else if(state===S.MENU || state===S.OVER) startRun();
+  }
+  else if(e.code==='KeyP' || e.code==='Escape'){
+    if(state===S.RUN) setPaused(!paused);
+    else if(state===S.OVER) goMenu();
+  }
+  else if(e.code==='KeyM') setMuted(!muted);
+});
 updateShields();
 
 /* ============================ MAIN LOOP ============================= */
@@ -1215,7 +1336,7 @@ function frame(){
 
   /* ------- music pulse ------- */
   pulse*=Math.pow(0.05,dt);
-  if(analyser && musicOK && !music.paused){
+  if(analyser && !music.paused && music.readyState>2){
     analyser.getByteFrequencyData(freqData);
     let low=0; for(let i=1;i<6;i++) low+=freqData[i];
     low/=5*255;
@@ -1254,6 +1375,7 @@ function frame(){
 
     /* path tracking */
     extendPath(carIdx+170);
+    spawnScenery(carIdx+SCENERY_AHEAD);
     while(carIdx<path.length-2){
       const n=path[carIdx+1];
       const dx=carX-n.x, dz=carZ-n.z;
