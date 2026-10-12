@@ -6,7 +6,7 @@ Steer through the city, dodge barricades, spike strips and orbital lasers, hit r
 
 ## Play
 
-Open `index.html` through a web server, or host the folder on GitHub Pages. The game is a single HTML file; keep `Of Us (Remastered).mp3` next to it.
+Open `index.html` through a web server, or host the folder on GitHub Pages. The game is a single HTML file; keep `Of_Us_Master_Game.mp3` next to it.
 
 To run it locally:
 

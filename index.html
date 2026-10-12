@@ -7,7 +7,7 @@
 <!--
   OF US : NEON CIRCUIT  —  Cyberpunk street racer
   Music by Delrogue. Single-file Three.js game for GitHub Pages.
-  Drop this file in the repo root next to "Of Us (Remastered).mp3".
+  Drop this file in the repo root next to "Of_Us_Master_Game.mp3".
   Name it index.html so the Pages link opens the game directly.
 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -309,7 +309,7 @@ const music = new Audio();
 music.loop = true; music.volume = 0.85; music.muted = muted;
 if(!LOCAL_FILE) music.crossOrigin = 'anonymous';
 music.preload = 'auto';
-music.src = 'Of%20Us%20(Remastered).mp3';
+music.src = 'Of_Us_Master_Game.mp3';
 
 function audioInit(){
   if(ac) return;
