@@ -1,35 +1,19 @@
-# Of Us · Neon Circuit
+# OF US: SKYLINE RUN
 
-A cyberpunk street racer that runs in the browser, set to "Of Us (Remastered)" by Delrogue.
+A 3D cyberpunk flying-car racer set in the **Of Us · Neon Circuit** universe, with a music-reactive megacity driven by the Delrogue soundtrack (`Of_Us_Master_Game.mp3`).
 
-Steer through the city, dodge barricades, spike strips and orbital lasers, hit ramps for air time, and see how far you get before your shields run out.
+Live at **https://ofus.delrogue.com**
 
-## Play
+## Develop
 
-Open `index.html` through a web server, or host the folder on GitHub Pages. The game is a single HTML file; keep `Of_Us_Master_Game.mp3` next to it.
-
-To run it locally:
-
-```
-python3 -m http.server 8000
+```bash
+npm install
+npm run dev      # play locally at http://localhost:5173
+npm run build    # type-check + production build into dist/
 ```
 
-Then visit http://localhost:8000.
+## Deploy
 
-Opening the file by double-click also works, but the road will not pulse in time with the music.
+Push to `main`. GitHub Actions builds the game and publishes it to GitHub Pages automatically.
 
-## Controls
-
-| Action | Keyboard | Touch |
-| --- | --- | --- |
-| Steer | ← → or A D | Arrow buttons, or the wheel |
-| Nitro | Space or Shift (hold) | Nitro button (hold) |
-| Pause | P or Esc | Pause button |
-| Mute | M | ♪ button |
-| Start / restart | Enter | Start Race / Restart |
-
-## Notes
-
-- Three difficulties: Rookie, Racer and Legend. Best score and distance are saved per difficulty in the browser.
-- Chase and cockpit cameras.
-- Three.js r128 and the Orbitron font load from CDNs, so the game needs an internet connection.
+The previous single-file game is preserved under the `v1-neon-circuit` tag.
