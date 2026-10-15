@@ -147,18 +147,22 @@ export class FlyingVehicle {
     this.chassisGroup.add(this.shieldShell);
 
     // Modelled Cockpit Interior for COCKPIT camera mode
-    const dashMat = new THREE.MeshStandardMaterial({ color: 0x07040e, roughness: 0.4, metalness: 0.8 });
-    const dash = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.25, 0.65), dashMat);
-    dash.position.set(0, 0.28, -0.95);
+    const dashMat = new THREE.MeshStandardMaterial({ color: 0x1a1430, emissive: 0x0c0818, roughness: 0.4, metalness: 0.6 });
+    // Shallow dash lip that fills only the bottom of the frame; the camera sits at (0, 0.56, -0.35)
+    const dash = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.3, 0.12), dashMat);
+    dash.position.set(0, 0.085, -0.81);
+    const dashTrim = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.006, 0.006), this.neonTrimMat);
+    dashTrim.position.set(0, 0.236, -0.87);
     const holoScreen = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.24, 0.05),
-      new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.3, side: THREE.DoubleSide })
+      new THREE.PlaneGeometry(0.16, 0.05),
+      new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.45, side: THREE.DoubleSide })
     );
-    // Small strip on the dash lip, below the cockpit camera's sightline
-    holoScreen.position.set(0, 0.4, -0.6);
-    holoScreen.rotation.x = -0.6;
-    this.cockpitGroup.add(dash, holoScreen);
-    this.chassisGroup.add(this.cockpitGroup);
+    holoScreen.position.set(0, 0.237, -0.81);
+    holoScreen.rotation.x = -Math.PI / 2;
+    this.cockpitGroup.add(dash, dashTrim, holoScreen);
+    this.cockpitGroup.visible = false;
+    // Parented to root rather than the banking chassis so the dash stays steady in frame
+    this.root.add(this.cockpitGroup);
 
     // Glowing Underlight
     this.underLight = new THREE.PointLight(0x00f3ff, 3.5, 18);
@@ -167,6 +171,14 @@ export class FlyingVehicle {
 
     this.root.add(this.chassisGroup);
     scene.add(this.root);
+  }
+
+  /** Cockpit view hides the exterior hull (keeping lights and the shield) and shows the dash. */
+  public setCockpitView(on: boolean): void {
+    this.cockpitGroup.visible = on;
+    for (const child of this.chassisGroup.children) {
+      if (child instanceof THREE.Mesh && child !== this.shieldShell) child.visible = !on;
+    }
   }
 
   public reset(diff: DifficultyConfig): void {

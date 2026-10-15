@@ -712,6 +712,7 @@ class SkylineRunGame {
   private updateCamera(dt: number, mode: CameraMode, speedRatio: number): void {
     const carPos = this.vehicle.root.position;
     const carQuat = this.vehicle.root.quaternion;
+    this.vehicle.setCockpitView(mode === 'COCKPIT' && this.state !== 'CRASHING');
 
     // FOV kick with speed & Nitro
     const targetFov = mode === 'COCKPIT' ? 76 : 66 + speedRatio * 10 + (this.vehicle.isNitroActive ? 12 : 0);
