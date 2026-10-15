@@ -151,11 +151,12 @@ export class FlyingVehicle {
     const dash = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.25, 0.65), dashMat);
     dash.position.set(0, 0.28, -0.95);
     const holoScreen = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.75, 0.22),
-      new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.35, side: THREE.DoubleSide })
+      new THREE.PlaneGeometry(0.24, 0.05),
+      new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.3, side: THREE.DoubleSide })
     );
-    holoScreen.position.set(0, 0.48, -0.82);
-    holoScreen.rotation.x = -0.25;
+    // Small strip on the dash lip, below the cockpit camera's sightline
+    holoScreen.position.set(0, 0.4, -0.6);
+    holoScreen.rotation.x = -0.6;
     this.cockpitGroup.add(dash, holoScreen);
     this.chassisGroup.add(this.cockpitGroup);
 
